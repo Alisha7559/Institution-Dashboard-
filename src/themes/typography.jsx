@@ -3,6 +3,8 @@
  * @param {JsonObject} theme theme customization object
  */
 
+import { color } from "framer-motion";
+
 export default function themeTypography(theme) {
   return {
     fontFamily: theme?.customization?.fontFamily,
@@ -53,8 +55,10 @@ export default function themeTypography(theme) {
     },
     body1: {
       fontSize: '0.875rem',
-      fontWeight: 400,
+      fontWeight: 500,
       lineHeight: '1.334em'
+     
+      
     },
     body2: {
       letterSpacing: '0em',
@@ -87,7 +91,7 @@ export default function themeTypography(theme) {
       }
     },
     mainContent: {
-      backgroundColor: theme.background,
+      backgroundColor:"#eaf7fd",
       width: '100%',
       minHeight: 'calc(100vh - 88px)',
       flexGrow: 1,
@@ -112,7 +116,8 @@ export default function themeTypography(theme) {
     },
     commonAvatar: {
       cursor: 'pointer',
-      borderRadius: '8px'
+      borderRadius: '8px',
+      
     },
     smallAvatar: {
       width: '22px',

@@ -11,6 +11,7 @@ import AnalyticsCard from './AnalyticsCard';
 // import { dashCount } from 'container/DashboardContainer/slice';
 import MainCard from 'ui-component/cards/MainCard';
 
+
 const DashboardDefault = () => {
   const dispatch = useDispatch();
   const [limit] = useState(5);
@@ -74,8 +75,8 @@ const DashboardDefault = () => {
               <UserOutlined />
             </Box>
             <Box>
-              <Typography sx={{ fontSize: 14, fontWeight: 600 }}>Platform Admin Dashboard</Typography>
-              <Typography sx={{ fontSize: 13 }}>Hello, Admin 👋</Typography>
+              <Typography sx={{ fontSize: 14, fontWeight: 600 }}>Platform Institution Dashboard</Typography>
+              <Typography sx={{ fontSize: 13 }}>Hello, 👋</Typography>
             </Box>
           </Box>
         </Box>

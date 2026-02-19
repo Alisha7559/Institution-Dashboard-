@@ -145,11 +145,11 @@ export default function BackgroundLetterAvatars() {
             {/* <Typography variant="body2" sx={{ color: '#364152', mb: 0.5 }}>
               <strong>User Type:</strong> {userType}
             </Typography> */}
-            <Typography variant="body2" sx={{ color: '#364152' }}>
+            <Typography variant="body2" sx={{ color: '#1357bd' }}>
               <strong>Status:</strong>{' '}
               <span
                 style={{
-                  color: status === 'active' ? '#22c55e' : '#ef4444',
+                  color: status === 'active' ? '#1d9c4b' : '#f00505',
                   fontWeight: 600,
                   textTransform: 'capitalize'
                 }}

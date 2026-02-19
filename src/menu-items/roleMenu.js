@@ -65,30 +65,30 @@ const RoleMenu = {
   breadcrumbs: false
 },
 
-    {
-      id: 'rating',
-      title: 'Ratings & Feedback',
-      type: 'item',
-      url: '/rating',
-      icon: icons.IconStar,
-      breadcrumbs: false
-    },
-    {
-      id: 'notifications',
-      title: 'Notification',
-      type: 'item',
-      url: '/notification',
-      icon: icons.IconBell,
-      breadcrumbs: false
-    },
-    {
-      id: 'reports',
-      title: 'Reports',
-      type: 'item',
-      url: '/reports',
-      icon: icons.IconFileAnalytics,
-      breadcrumbs: false
-    },
+    // {
+    //   id: 'rating',
+    //   title: 'Ratings & Feedback',
+    //   type: 'item',
+    //   url: '/rating',
+    //   icon: icons.IconStar,
+    //   breadcrumbs: false
+    // },
+    // {
+    //   id: 'notifications',
+    //   title: 'Notification',
+    //   type: 'item',
+    //   url: '/notification',
+    //   icon: icons.IconBell,
+    //   breadcrumbs: false
+    // },
+    // {
+    //   id: 'reports',
+    //   title: 'Reports',
+    //   type: 'item',
+    //   url: '/reports',
+    //   icon: icons.IconFileAnalytics,
+    //   breadcrumbs: false
+    // },
     
      
 

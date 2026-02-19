@@ -79,7 +79,7 @@ const ViewRatingDetail = ({ drawerOpen, setDrawerOpen, item }) => {
       PaperProps={{
         sx: {
           width: { xs: '100%', sm: '80%', md: '70%', lg: 800 },
-          background: '#fff',
+          background: '#ffffff',
           boxShadow: '-4px 0 16px rgba(0,0,0,0.08)',
           borderLeft: `4px solid ${primary}`
         }

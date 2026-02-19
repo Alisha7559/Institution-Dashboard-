@@ -7,7 +7,7 @@ import * as actionType from './slice';
 // ================= CREATE ORDER =================
 function* createOrder(action) {
   const orderReq = {
-    student: action.payload.student,
+    
     course: action.payload.course,
     institution: action.payload.institution,
     price: action.payload.price,
@@ -18,7 +18,8 @@ function* createOrder(action) {
     const params = {
       api: `${appConfig.ip}/api/createorder`,
       method: 'POST',
-      body: JSON.stringify(orderReq)
+      body: JSON.stringify(orderReq),
+      credentials: "include"
     };
 
     const res = yield call(commonApi, params);
@@ -61,25 +62,51 @@ function* getInstitutionOrders(action) {
 
 // ================= UPDATE ORDER =================
 function* updateOrder(action) {
+
   try {
+
     const params = {
+
       api: `${appConfig.ip}/api/updateorder/${action.payload.id}`,
+
       method: "PUT",
-      body: JSON.stringify(action.payload.updateData)
+
+      body: JSON.stringify(action.payload.updateData),
+
+      credentials: "include"
+
     };
 
     const res = yield call(commonApi, params);
 
     if (res) {
-      yield put(actionType.updateOrderSuccess(res.data.data));
-      yield call(toast.success, "Order updated successfully", { autoClose: 3000 });
-    }
-  } catch (error) {
-    yield put(actionType.updateOrderFail({ message: error.message }));
-    yield call(toast.error, "Order update failed", { autoClose: 3000 });
-  }
-}
 
+      yield put(actionType.updateOrderSuccess(res.data));
+
+      yield call(toast.success, "Order updated successfully", {
+
+        autoClose: 3000
+
+      });
+
+    }
+
+  }
+
+  catch (error) {
+
+    yield put(actionType.updateOrderFail({
+
+      message: error.message
+
+    }));
+
+    yield call(toast.error, "Order update failed");
+
+  }
+
+}
+ 
 
 // ================= WATCHER =================
 export default function* OrderWatcher() {

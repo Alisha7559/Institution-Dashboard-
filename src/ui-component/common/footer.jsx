@@ -39,11 +39,11 @@ const Footer = () => {
         }}
       >
         <Typography variant="body1" sx={{ textAlign: 'center' }}>
-          Designed and Developed by 
+          Designed and Developed by NXTSTEP
          
         </Typography>
         <Typography color="grey" variant="caption" >
-          Version : {AppVersion}
+          Design Your Future  {AppVersion}
         </Typography>
       </Toolbar>
     </AppBar>

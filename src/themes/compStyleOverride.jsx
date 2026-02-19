@@ -3,7 +3,7 @@ export default function componentStyleOverrides() {
     MuiDrawer: {
       styleOverrides: {
         paper: {
-          backgroundColor: '#1d3848', 
+          backgroundColor: '#76afd0', 
           color: '#FFFFFF' 
         }
       }
@@ -16,7 +16,7 @@ export default function componentStyleOverrides() {
             color: '#0F3A2D', 
             backgroundColor: '#fff', 
             '&:hover': {
-              backgroundColor: '#fff' 
+              backgroundColor: '#901c1c' 
             },
             '& .MuiListItemIcon-root': {
               color: '#0F3A2D' 

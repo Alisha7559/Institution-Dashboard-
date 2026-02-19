@@ -158,7 +158,7 @@ const NavItem = ({ item, level, lastItem }) => {
             marginLeft: leftDrawerOpened ? '' : largeScreen ? 0 : -0.4,
             minWidth: !item?.icon ? 18 : 36,
             borderRadius: '8px',
-            p: 1
+  
           }}
         >
           {itemIcon}

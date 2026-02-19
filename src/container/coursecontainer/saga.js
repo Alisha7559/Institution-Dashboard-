@@ -27,7 +27,7 @@ function* addCourseSaga(action) {
 function* getCoursesSaga() {
   try {
     const params = {
-      api: `${config.ip}/api/institute/course`,
+      api: `${config.ip}/api/institute/getcourse`,
       method: 'GET',
       authorization: 'Bearer'
     };
