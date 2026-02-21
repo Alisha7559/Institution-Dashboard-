@@ -10,7 +10,7 @@ const reducer = combineReducers({
   login: loginReducer,
   customization: customizationReducer,
   rating: ratingReducer,
-  cours: coursReducer ,// ✅ MUST MATCH SELECTOR
+  course: coursReducer ,// ✅ MUST MATCH SELECTOR
   order:orderReducer
 });
 

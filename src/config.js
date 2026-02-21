@@ -16,7 +16,7 @@ const config = {
   // image server
   imgServerip:
     import.meta.env.VITE_REACT_APP_IMG_API_ENDPOINT ||
-    'http://localhost:5000/uploads'
+    'http://localhost:7000/uploads'
 };
 
 export default config;
