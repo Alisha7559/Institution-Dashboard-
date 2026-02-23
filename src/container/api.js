@@ -1,44 +1,30 @@
-import { call } from 'redux-saga/effects';
-import config from '../config';
-import { toast } from 'react-toastify';
+import appConfig from '../config';
+  import { toast } from 'react-toastify';
 
-function* commonApi(value) {
-  const headers = {
-    Accept: 'application/json',
-    'Content-Type': 'application/json'
+  const commonApi = async ({ api, method, body, authorization, token }) => {
+    let headers = { Accept: 'application/json' };
+    if (authorization === 'Bearer') headers.Authorization = `Bearer ${token}`;
+    if (!(body instanceof FormData)) headers['Content-Type'] = 'application/json';
+
+    const response = await fetch(api, {
+      method,
+      headers,
+      body: body instanceof FormData ? body : JSON.stringify(body),
+      credentials: 'include'
+    });
+
+    console.log("response",response);
+    
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        toast.error('Session expired');
+        window.location.href = '/login';
+        return;
+      }
+      throw await response.json();
+    }
+    return response.status === 204 ? {} : await response.json();
   };
 
-  // ✅ Attach token only if it exists
-  if (value.authorization === 'Bearer' && config.token) {
-    headers.Authorization = `Bearer ${config.token}`;
-  }
-
-  let response;
-
-  try {
-    response = yield call(fetch, value.api, {
-      method: value.method,
-      headers,
-      body: value.body || null,
-      credentials:"include"
-    });
-  } catch (err) {
-    // network / CORS error
-    throw new Error('Server not reachable');
-  }
-
-  if (!response.ok) {
-    if (response.status === 401) {
-      toast.error('Session expired. Please login again.');
-    }
-
-    const errorText = yield response.text();
-    throw new Error(errorText || 'API Error');
-  }
-
-  if (response.status === 204) return {};
-
-  return yield response.json();
-}
-
-export default commonApi;
+  export default commonApi;
