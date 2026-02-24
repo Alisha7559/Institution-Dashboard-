@@ -161,7 +161,7 @@ const CoursesDashboard = () => {
   });
 
   if (editMode) {
-    dispatch(updateCourse(form));
+    dispatch(updateCourse({id:formData._id,data:form}));
   } else {
     dispatch(addCourse(form));
   }

@@ -21,7 +21,7 @@ function* login(action) {
       successAction: actionType.loginSuccess(),
       failAction: actionType.loginFail(),
       authorization: null,
-      body: JSON.stringify(loginReq)
+      body: loginReq
     };
 
     const res = yield call(commonApi, params);

@@ -47,12 +47,14 @@ function* getCoursesSaga(action) {
 
 /* ---------------- UPDATE COURSE ---------------- */
 function* updateCourseSaga(action) {
+  console.log("aaa",action.payload.data);
+  
   try {
     const params = {
-      api: `${config.ip}/api/institute/course/${action.payload._id}`,
+      api: `${config.ip}/api/institute/course/${action.payload.id}`,
       method: 'PUT',
       authorization: 'Bearer',
-      body: JSON.stringify(action.payload)
+      body: action.payload.data
     };
 
     const res = yield call(commonApi, params);
