@@ -16,7 +16,8 @@ import {
   TableRow,
   Chip,
   Paper,
-  CircularProgress
+  CircularProgress,
+  LinearProgress
 } from "@mui/material";
 
 import EventSeatIcon from "@mui/icons-material/EventSeat";
@@ -32,8 +33,8 @@ const statusColor = {
 const SeatManagement = () => {
   const dispatch = useDispatch();
 
-  const { courses, loading } = useSelector(
-    (state) => state.cours
+  const { courses = [], loading } = useSelector(
+    (state) => state.course || {}
   );
 
   /* ===== FETCH COURSES ===== */
@@ -47,23 +48,29 @@ const SeatManagement = () => {
     let filledSeats = 0;
 
     const courseSeats = courses.map((course) => {
-      // 🔴 TEMP: replace with real student count later
-      const filled = Math.floor(course.totalSeats * 0.8);
-      const vacant = course.totalSeats - filled;
+      const total = Number(course.totalSeats) || 0;
 
-      totalSeats += course.totalSeats;
+      // ✅ Real filled seats logic
+      const filled = course.enrolledStudents
+        ? course.enrolledStudents.length
+        : 0;
+
+      const vacant = total - filled;
+
+      totalSeats += total;
       filledSeats += filled;
 
       let status = "Available";
-      if (vacant === 0) status = "Full";
-      else if (vacant <= 20) status = "Limited";
+      if (vacant <= 0) status = "Full";
+      else if (vacant <= 5) status = "Limited";
 
       return {
         name: course.courseName,
-        total: course.totalSeats,
+        total,
         filled,
         vacant,
-        status
+        status,
+        percentage: total > 0 ? (filled / total) * 100 : 0
       };
     });
 
@@ -134,9 +141,10 @@ const SeatManagement = () => {
               <TableHead>
                 <TableRow>
                   <TableCell><b>Course Name</b></TableCell>
-                  <TableCell align="center"><b>Total Seats</b></TableCell>
+                  <TableCell align="center"><b>Total</b></TableCell>
                   <TableCell align="center"><b>Filled</b></TableCell>
                   <TableCell align="center"><b>Vacant</b></TableCell>
+                  <TableCell align="center"><b>Progress</b></TableCell>
                   <TableCell align="center"><b>Status</b></TableCell>
                 </TableRow>
               </TableHead>
@@ -148,6 +156,12 @@ const SeatManagement = () => {
                     <TableCell align="center">{course.total}</TableCell>
                     <TableCell align="center">{course.filled}</TableCell>
                     <TableCell align="center">{course.vacant}</TableCell>
+                    <TableCell align="center" sx={{ width: 200 }}>
+                      <LinearProgress
+                        variant="determinate"
+                        value={course.percentage}
+                      />
+                    </TableCell>
                     <TableCell align="center">
                       <Chip
                         label={course.status}
@@ -160,7 +174,7 @@ const SeatManagement = () => {
 
                 {seatData.courseSeats.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={5} align="center">
+                    <TableCell colSpan={6} align="center">
                       No courses found
                     </TableCell>
                   </TableRow>

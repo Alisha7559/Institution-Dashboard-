@@ -8,7 +8,8 @@ import {
   IconFileAnalytics,
   IconShoppingCart
 } from '@tabler/icons-react';
-// constant
+
+/* Icons */
 const icons = {
   IconLayoutDashboard,
   IconBook,
@@ -19,11 +20,14 @@ const icons = {
   IconFileAnalytics,
   IconShoppingCart
 };
+
 const RoleMenu = {
   id: 'dashboard',
   title: '',
   type: 'group',
+
   children: [
+
     {
       id: 'dashboard',
       title: 'Dashboard',
@@ -32,14 +36,16 @@ const RoleMenu = {
       icon: icons.IconLayoutDashboard,
       breadcrumbs: false
     },
+
     {
       id: 'courses',
-      title: 'courses',
+      title: 'Courses',
       type: 'item',
       url: '/courses',
       icon: icons.IconBook,
       breadcrumbs: false
     },
+
     {
       id: 'students',
       title: 'Students',
@@ -48,6 +54,7 @@ const RoleMenu = {
       icon: icons.IconUsers,
       breadcrumbs: false
     },
+
     {
       id: 'seat-management',
       title: 'Seat Management',
@@ -56,14 +63,15 @@ const RoleMenu = {
       icon: icons.IconArmchair,
       breadcrumbs: false
     },
+
     {
-  id: 'order',
-  title: 'Orders',
-  type: 'item',
-  url: '/order',
-  icon: icons.IconShoppingCart,
-  breadcrumbs: false
-},
+      id: 'order',
+      title: 'Orders',
+      type: 'item',
+      url: '/order',
+      icon: icons.IconShoppingCart,
+      breadcrumbs: false
+    },
 
     {
       id: 'rating',
@@ -73,6 +81,7 @@ const RoleMenu = {
       icon: icons.IconStar,
       breadcrumbs: false
     },
+
     {
       id: 'notifications',
       title: 'Notification',
@@ -81,6 +90,7 @@ const RoleMenu = {
       icon: icons.IconBell,
       breadcrumbs: false
     },
+
     {
       id: 'reports',
       title: 'Reports',
@@ -88,12 +98,7 @@ const RoleMenu = {
       url: '/reports',
       icon: icons.IconFileAnalytics,
       breadcrumbs: false
-    },
-    
-     
-
-
-
+    }
 
   ]
 };

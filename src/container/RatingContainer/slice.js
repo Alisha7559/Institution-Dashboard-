@@ -1,40 +1,45 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
+
+const initialState = {
+  list: [],
+  count: 0,
+  loading: false,
+  error: null
+};
 
 const ratingSlice = createSlice({
-    name: 'rating',
-    initialState: {
-        list: [], 
-        listLoading: false, 
-        listError: null,
-        listCount: 0 
+  name: "rating",
+  initialState,
+  reducers: {
+
+    getRating: (state) => {
+      state.loading = true;
     },
-    reducers: {
 
-        getRatingCount: (state, action) => {
-            state.listLoading = true;
-           
-        },
-        getRatingCountSuccess: (state, action) => {
-            state.listLoading = false;
-            state.listCount = action.payload.count; 
-        },
-        getRatingCountFail: (state, action) => {
-            state.listLoading = false;
+    getRatingSuccess: (state, action) => {
+      state.loading = false;
+      state.list = action.payload.data || [];
+      state.count = action.payload.count || 0;
+    },
 
-        }
-    }
+    getRatingFailure: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+
+
+    
+
+  }
 });
 
-
 export const {
-    getRatingCount,
-    getRatingCountSuccess,
-    getRatingCountFail
+  getRating,
+  getRatingSuccess,
+  getRatingFailure,
+  getRatingCount,
+  getRatingCountSuccess,
+  getRatingCountFailure
 } = ratingSlice.actions;
-
-
-export const selectRatingList = (state) => state.rating.list;
-export const selectRatingListLoading = (state) => state.rating.listLoading;
-export const selectRatingListError = (state) => state.rating.listError;
 
 export default ratingSlice.reducer;
