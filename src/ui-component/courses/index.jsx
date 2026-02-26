@@ -87,27 +87,27 @@ const CoursesDashboard = () => {
     setOpen(true);
   };
 
- const openEditDrawer = (course) => {
-  setEditMode(true);
-  setFormData({
-    _id: course._id, // important!
-    courseName: course.courseName || '',
-    category: course.category?._id || '',
-    subcategory: course.subcategory?._id || '',
-    level: course.level || '',
-    mode: course.mode || 'Online',
-    fees: course.fees || '',
-    totalSeats: course.totalSeats || '',
-    location: course.location || '',
-    modules: course.modules || [],
-    description: course.description || '',
-    status: course.status || 'Active',
-    approval: course.approval || 'Pending',
-    institution: course.institution?._id || userData?._id || '',
-    images: course.images
-  });
-  setOpen(true);
-};
+  const openEditDrawer = (course) => {
+    setEditMode(true);
+    setFormData({
+      _id: course._id, // important!
+      courseName: course.courseName || '',
+      category: course.category?._id || '',
+      subcategory: course.subcategory?._id || '',
+      level: course.level || '',
+      mode: course.mode || 'Online',
+      fees: course.fees || '',
+      totalSeats: course.totalSeats || '',
+      location: course.location || '',
+      modules: course.modules || [],
+      description: course.description || '',
+      status: course.status || 'Active',
+      approval: course.approval || 'Pending',
+      institution: course.institution?._id || userData?._id || '',
+      images: course.images
+    });
+    setOpen(true);
+  };
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -122,52 +122,50 @@ const CoursesDashboard = () => {
   };
 
   const handleSubmit = () => {
-  if (!formData.courseName || !formData.category || !formData.subcategory) {
-    alert("Please fill all required fields!");
-    return;
-  }
-
-  const form = new FormData();
-
-  if (editMode) form.append("_id", formData._id);
-
-  form.append("courseName", formData.courseName);
-  form.append("category", formData.category);
-  form.append("subcategory", formData.subcategory);
-  form.append("institution", formData.institution);
-  form.append("totalSeats", formData.totalSeats);
-  form.append("fees", formData.fees);
-  form.append("mode", formData.mode);
-  form.append("status", formData.status);
-  form.append("approval", formData.approval);
-  form.append("location", formData.location);
-  form.append("description", formData.description);
-
-  form.append("modules", JSON.stringify(formData.modules));
-
-  // important part
-  formData.images.forEach((img) => {
-
-    // new files
-    if (img instanceof File) {
-      form.append("images", img);
+    if (!formData.courseName || !formData.category || !formData.subcategory) {
+      alert("Please fill all required fields!");
+      return;
     }
 
-    // existing images
-    else {
-      form.append("existingImages", img);
+    const form = new FormData();
+
+    if (editMode) form.append("_id", formData._id);
+
+    form.append("courseName", formData.courseName);
+    form.append("category", formData.category);
+    form.append("subcategory", formData.subcategory);
+    form.append("institution", formData.institution);
+    form.append("totalSeats", formData.totalSeats);
+    form.append("fees", formData.fees);
+    form.append("mode", formData.mode);
+    form.append("status", formData.status);
+    form.append("approval", formData.approval);
+    form.append("location", formData.location);
+    form.append("description", formData.description);
+    form.append("modules", JSON.stringify(formData.modules));
+    // important part
+    formData.images.forEach((img) => {
+
+      // new files
+      if (img instanceof File) {
+        form.append("images", img);
+      }
+
+      // existing images
+      else {
+        form.append("existingImages", img);
+      }
+
+    });
+
+    if (editMode) {
+      dispatch(updateCourse({ id: formData._id, form }));
+    } else {
+      dispatch(addCourse(form));
     }
 
-  });
-
-  if (editMode) {
-    dispatch(updateCourse({id:formData._id,data:form}));
-  } else {
-    dispatch(addCourse(form));
-  }
-
-  setOpen(false);
-};
+    setOpen(false);
+  };
 
   const toggleStatus = (course) => {
     dispatch(updateCourse({
@@ -207,7 +205,7 @@ const CoursesDashboard = () => {
             <TableCell>Fees</TableCell>
             <TableCell>Seats</TableCell>
             <TableCell>Status</TableCell>
-            <TableCell>Approval</TableCell>
+
             <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
@@ -226,7 +224,6 @@ const CoursesDashboard = () => {
                 <TableCell>₹{course.fees}</TableCell>
                 <TableCell>{course.totalSeats}</TableCell>
                 <TableCell>{course.status}</TableCell>
-                <TableCell>{course.approval}</TableCell>
                 <TableCell>
                   <IconButton onClick={() => openEditDrawer(course)}><EditIcon /></IconButton>
                   <IconButton onClick={() => toggleStatus(course)}><PowerSettingsNewIcon color="success" /></IconButton>
@@ -255,7 +252,7 @@ const CoursesDashboard = () => {
                 multiple
                 onChange={(e) => {
                   const files = Array.from(e.target.files);
-                  setFormData({ ...formData,  images: [...formData.images, ...files]  });
+                  setFormData({ ...formData, images: [...formData.images, ...files] });
                 }}
               />
             </Button>
@@ -357,7 +354,7 @@ const CoursesDashboard = () => {
           <FormControl fullWidth margin="normal">
             <InputLabel>Modules</InputLabel>
             <Select value={formData.modules?.length || 0} onChange={handleModulesChange}>
-              {[1,2,3,4,5].map(num => <MenuItem key={num} value={num}>{num}</MenuItem>)}
+              {[1, 2, 3, 4, 5].map(num => <MenuItem key={num} value={num}>{num}</MenuItem>)}
             </Select>
           </FormControl>
 

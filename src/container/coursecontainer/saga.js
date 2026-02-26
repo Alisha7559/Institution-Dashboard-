@@ -50,11 +50,12 @@ function* updateCourseSaga(action) {
   console.log("aaa",action.payload.data);
   
   try {
+    const {id ,form } = action.payload
     const params = {
-      api: `${config.ip}/api/institute/course/${action.payload.id}`,
+      api: `${config.ip}/api/institute/course/${id}`,
       method: 'PUT',
       authorization: 'Bearer',
-      body: action.payload.data
+      body: form
     };
 
     const res = yield call(commonApi, params);

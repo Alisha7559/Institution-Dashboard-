@@ -6,7 +6,8 @@ import {
   IconStar,
   IconBell,
   IconFileAnalytics,
-  IconShoppingCart
+  IconShoppingCart,
+  IconMessageDots
 } from '@tabler/icons-react';
 // constant
 const icons = {
@@ -17,7 +18,8 @@ const icons = {
   IconStar,
   IconBell,
   IconFileAnalytics,
-  IconShoppingCart
+  IconShoppingCart,
+  IconMessageDots
 };
 const RoleMenu = {
   id: 'dashboard',
@@ -46,6 +48,14 @@ const RoleMenu = {
       type: 'item',
       url: '/students',
       icon: icons.IconUsers,
+      breadcrumbs: false
+    },
+     {
+      id: 'enquiry',
+      title: 'Enquiry',
+      type: 'item',
+      url: '/enquiry',
+      icon: icons.IconMessageDots,
       breadcrumbs: false
     },
     {
