@@ -26,6 +26,7 @@ function* addCourseSaga(action) {
 }
 
 /* ---------------- GET COURSES ---------------- */
+
 function* getCoursesSaga(action) {
   try {
     const params = {
@@ -36,8 +37,8 @@ function* getCoursesSaga(action) {
 
     const res = yield call(commonApi, params);
 
-    yield put(actions.getCoursesSuccess(res.data));
 
+    yield put(actions.getCoursesSuccess(res.data));
   } catch (error) {
     yield put(actions.getCoursesFail(error.message));
     toast.error(error.message || 'Failed to load courses');
@@ -50,11 +51,14 @@ function* updateCourseSaga(action) {
   
   try {
     const {id ,form } = action.payload
+ 
     const params = {
+      api: `${config.ip}/api/institute/course/${id}`,
       api: `${config.ip}/api/institute/course/${id}`,
       method: 'PUT',
       authorization: 'Bearer',
       body: form
+      
     };
 
     const res = yield call(commonApi, params);

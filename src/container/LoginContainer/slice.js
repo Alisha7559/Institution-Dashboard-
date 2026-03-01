@@ -4,7 +4,7 @@ const loginSlice = createSlice({
     name: 'login',
     initialState: {
         data: {},
-        userData: [],
+        userData: {},
         loading: false,
         error: null
     },
@@ -31,7 +31,7 @@ const loginSlice = createSlice({
             state.error = null;
         },
         userMeSuccess: (state, action) => {
-         state.loading = false;
+            state.loading = false;
             state.userData = action.payload;
             state.error = null;
         },

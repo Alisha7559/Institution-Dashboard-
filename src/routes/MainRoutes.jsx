@@ -12,6 +12,7 @@ const Course = Loadable(lazy(() => import('ui-component/courses')));
 const Students = Loadable(lazy(() => import('ui-component/students')));
 const Seatmanagement = Loadable(lazy(() => import('ui-component/seatmanagement')));
 const Order = Loadable(lazy(() => import('ui-component/order')));
+const Enquiry= Loadable(lazy(() => import('ui-component/enquiry')));
 
 /* ✅ Ratings Page */
 const UserRatingPage = Loadable(
@@ -46,6 +47,10 @@ const MainRoutes = {
       element: <Students />
     },
 
+    {
+      path: 'enquiry',
+      element: <Enquiry />
+    },
     {
       path: 'order',
       element: <Order />

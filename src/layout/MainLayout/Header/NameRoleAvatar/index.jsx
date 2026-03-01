@@ -50,7 +50,7 @@ export default function BackgroundLetterAvatars() {
   };
 
   // Extract user info
-  const name = userData?.name || `${userData?.firstName || ''} ${userData?.lastName || ''}`.trim() || 'User';
+  const name = userData?.name 
   const email = userData.email
   const phone = userData?.phone || 'N/A';
   const role = userData?.role || 'N/A';

@@ -21,31 +21,29 @@ function* login(action) {
       successAction: actionType.loginSuccess(),
       failAction: actionType.loginFail(),
       authorization: null,
-      body: JSON.stringify(loginReq)
+      body: loginReq
     };
 
     const res = yield call(commonApi, params);
 
     if (res) {
-     
-
       yield call(toast.success, 'Login successful', { autoClose: 3000 });
 
-      yield call(userMe);
+      // ✅ FIXED HERE
+      yield put(actionType.userMe());
 
       yield call(action.payload.navigate, '/dashboard');
     } else {
       yield call(toast.error, 'Login failed. Please try again.', { autoClose: 3000 });
     }
-  }
-   catch (error) {
+  } catch (error) {
     console.error('Login failed:', error);
     yield call(toast.error, 'Login failed. Please try again.', { autoClose: 3000 });
   }
 }
 
 function* userMe() {
-  
+ 
   try {
     const params = {
       api: `${appConfig.ip}/api/profile`,
@@ -60,6 +58,7 @@ function* userMe() {
     const res = yield call(commonApi, params);
     
     yield put(actionType.userMeSuccess(res));
+    
   } catch (error) {
     console.error('Fetch User failed:', error);
     yield put(
