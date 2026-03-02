@@ -52,7 +52,7 @@ function* updateCourseSaga(action) {
   try {
     const {id ,form } = action.payload
     const params = {
-      api: `${config.ip}/api/institute/course/${id}`,
+      api: `${config.ip}/api/update/${id}`,
       method: 'PUT',
       authorization: 'Bearer',
       body: form

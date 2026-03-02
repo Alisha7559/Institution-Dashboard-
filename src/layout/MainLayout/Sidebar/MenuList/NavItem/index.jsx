@@ -91,7 +91,7 @@ const NavItem = ({ item, level, lastItem }) => {
         '&.Mui-selected': {
           backgroundColor: '#537fa0!important',
           marginRight: leftDrawerOpened ? 0 : '0px',
-          color: '#0a6d11'
+          color: '#ea580c'
         }
       }}
       selected={isSelected}
@@ -181,7 +181,7 @@ const NavItem = ({ item, level, lastItem }) => {
                 sx={{ ...theme.typography.subMenuCaption }}
                 display="block"
                 gutterBottom
-                color={isSelected ? '#F39C12' : '#F39C12'}
+                color={isSelected ? '#ea580c' : '#ea580c'}
               >
                 {item.caption}
               </Typography>

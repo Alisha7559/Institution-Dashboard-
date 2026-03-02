@@ -29,10 +29,10 @@ const Sidebar = ({ drawerOpen, drawerToggle }) => {
         </Box>
       </Box>
       <BrowserView>
-        <Box sx={{ position: 'relative', height: matchUpMd ? 'calc(100vh - 88px)' : 'calc(100vh - 99px)', paddingTop: '20px',
-        background: "#001531"
+        <Box sx={{ position: 'relative', height: matchUpMd ? 'calc(100vh - 88px)' : 'calc(00vh - 99px)', paddingTop: '20px',
+        background: "#0f172a"
 }}>
-          <Box sx={{ pointerEvents: isDraftOrPending ? 'none' : 'auto', opacity: isDraftOrPending ? 0.5 : 1 }}>
+          <Box >
             <MenuList />
           </Box>
           {matchUpMd && (
@@ -45,12 +45,12 @@ const Sidebar = ({ drawerOpen, drawerToggle }) => {
                 borderTop: `1px solid rgba(148, 23, 23, 0.1)`,
                 padding: '10px 16px',
                 transition: 'width 0.4s ease',
-                width: drawerOpen ? (largeScreen ? '260px' : '260px') : largeScreen ? '75px' : '65px',
+                width: drawerOpen ? (largeScreen ? '280px' : '280px') : largeScreen ? '65px' : '65px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'flex-end',
-                backgroundColor: '#F39C12',
-                color: '#001531',
+                backgroundColor: '#ea580c',
+                color: '#0f172a',
                 cursor: isDraftOrPending ? 'not-allowed' : 'pointer',
                 zIndex: 1300
               }}
@@ -132,7 +132,7 @@ const Sidebar = ({ drawerOpen, drawerToggle }) => {
               ? {
                   '& .MuiDrawer-paper': {
                     width: width,
-                    backgroundColor: '#34699c',
+                    backgroundColor: '#0f172a',
                     paddingTop: '10px',
                     borderRight: 'none',
                     [theme.breakpoints.up('md')]: {

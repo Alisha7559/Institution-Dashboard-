@@ -18,8 +18,8 @@ function* login(action) {
     const params = {
       api: `${appConfig.ip}/api/login`,
       method: 'POST',
-      successAction: actionType.loginSuccess(),
-      failAction: actionType.loginFail(),
+      successAction: actionType.loginSuccess,
+      failAction: actionType.loginFail,
       authorization: null,
       body: loginReq
     };
@@ -43,7 +43,7 @@ function* login(action) {
 }
 
 function* userMe() {
- 
+
   try {
     const params = {
       api: `${appConfig.ip}/api/profile`,
@@ -51,14 +51,14 @@ function* userMe() {
       successAction: actionType.userMeSuccess(),
       failAction: actionType.userMeFail(),
       authorization: `Bearer`,
-      
-    
+
+
     };
 
     const res = yield call(commonApi, params);
-    
+
     yield put(actionType.userMeSuccess(res));
-    
+
   } catch (error) {
     console.error('Fetch User failed:', error);
     yield put(
@@ -70,8 +70,31 @@ function* userMe() {
     yield call(toast.error, 'Failed to load user details.', { autoClose: 3000 });
   }
 }
+function* updateProfile(action) {
+  try {
+    const params = {
+      api: `${appConfig.ip}/api/update`,
+      method: "PUT",
+      body: action.payload,
+      authorization: "Bearer",
+    };
+
+    const res = yield call(commonApi, params);
+
+    yield put(actionType.updateProfileSuccess(res));
+
+    // ✅ ADD THIS
+    yield put(actionType.userMe());
+
+    yield call(toast.success, "Profile updated successfully");
+  } catch (error) {
+    yield put(actionType.updateProfileFail());
+    yield call(toast.error, "Profile update failed");
+  }
+}
 
 export default function* LoginActionWatcher() {
   yield takeEvery(actionType.userLogin, login);
   yield takeEvery(actionType.userMe, userMe);
+  yield takeEvery(actionType.updateProfile, updateProfile);
 }

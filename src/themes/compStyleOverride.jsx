@@ -3,7 +3,7 @@ export default function componentStyleOverrides() {
     MuiDrawer: {
       styleOverrides: {
         paper: {
-          backgroundColor: '#1d3848', 
+          backgroundColor: '#ffffff', 
           color: '#FFFFFF' 
         }
       }

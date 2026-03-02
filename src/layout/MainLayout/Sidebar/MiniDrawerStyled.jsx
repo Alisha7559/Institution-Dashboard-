@@ -11,7 +11,7 @@ function openedMixin(theme) {
     width: width,
     borderRight: 'none',
     zIndex: 1099,
-    background: '#001531',
+    background: '#0f172a',
     overflowX: 'hidden',
     boxShadow: 'none',
     transition: theme.transitions.create('width', {

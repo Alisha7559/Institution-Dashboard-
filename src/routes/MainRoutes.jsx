@@ -5,7 +5,7 @@ import { Navigate } from 'react-router-dom';
 import MainLayout from 'layout/MainLayout';
 import Loadable from 'ui-component/Loadable';
 import AuthGuard from 'utils/authGuard';
-
+import InstitutionProfile from 'ui-component/institution-profile';
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('ui-component/dashboard')));
 const Course = Loadable(lazy(() => import('ui-component/courses')));
@@ -21,7 +21,7 @@ const UserRatingPage = Loadable(lazy(() => import('ui-component/user_rating')));
 const MainRoutes = {
   path: '/',
   element: (
-    <AuthGuard user={['Vendor', 'Surveyor', 'Requester']}>
+    <AuthGuard user={['Vendor', 'Surveyor', 'Requester','Institution']}>
       <MainLayout />
     </AuthGuard>
   ),
@@ -62,7 +62,11 @@ const MainRoutes = {
     {
       path: 'rating',
       element: <UserRatingPage />
-    }
+    },
+    {
+  path: 'institution-profile',
+  element: <InstitutionProfile />
+}
   ]
 };
 

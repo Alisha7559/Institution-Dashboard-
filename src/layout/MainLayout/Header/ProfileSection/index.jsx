@@ -116,7 +116,7 @@ const ResponsiveIcons = () => {
           color: 'white',
           backgroundColor: '#00182e', 
           '&:hover': {
-            backgroundColor: '#da7808' 
+            backgroundColor: '#ea580c' 
           },
           padding: matchesXs ? '6px' : '8px'
         }}

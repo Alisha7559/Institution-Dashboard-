@@ -36,7 +36,7 @@ const RoleMenu = {
     },
     {
       id: 'courses',
-      title: 'courses',
+      title: 'Courses',
       type: 'item',
       url: '/courses',
       icon: icons.IconBook,
@@ -91,14 +91,7 @@ const RoleMenu = {
       icon: icons.IconBell,
       breadcrumbs: false
     },
-    {
-      id: 'reports',
-      title: 'Reports',
-      type: 'item',
-      url: '/reports',
-      icon: icons.IconFileAnalytics,
-      breadcrumbs: false
-    },
+   
     
      
 
