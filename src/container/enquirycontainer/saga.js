@@ -4,31 +4,71 @@ import commonApi from "../api";
 import config from "../../config";
 import * as actions from "./slice";
 
-function* getEnquiriesSaga() {
+/* ================= GET INSTITUTE ENQUIRIES ================= */
+function* getInstituteEnquiriesSaga() {
   try {
-    const params = { api: `${config.ip}/api/enquiry/institute`, method: "GET", credentials: "include" };
+    const params = {
+      api: `${config.ip}/api/enquiry/institute`,
+      method: "GET",
+      credentials: "include"
+    };
+
     const res = yield call(commonApi, params);
-    yield put(actions.getEnquiriesSuccess(res));
+
+    yield put(actions.getEnquirySuccess(res));
+
   } catch (error) {
-    yield put(actions.getEnquiriesFail(error.message));
+    yield put(actions.getEnquiryFailure(error.message));
     toast.error(error.message || "Failed to load enquiries");
   }
 }
 
-function* updateEnquiryStatusSaga(action) {
+/* ================= GET COURSE ENQUIRIES ================= */
+function* getCourseEnquiriesSaga(action) {
+  try {
+    const { courseId } = action.payload;
+
+    const params = {
+      api: `${config.ip}/api/enquiry/course/${courseId}`,
+      method: "GET",
+      credentials: "include"
+    };
+
+    const res = yield call(commonApi, params);
+
+    yield put(actions.getEnquirySuccess(res));
+
+  } catch (error) {
+    yield put(actions.getEnquiryFailure(error.message));
+    toast.error(error.message || "Failed to load course enquiries");
+  }
+}
+
+/* ================= UPDATE STATUS ================= */
+function* updateEnquirySaga(action) {
   try {
     const { id, status } = action.payload;
-    const params = { api: `${config.ip}/api/enquiry/${id}`, method: "PUT", body: { status }, credentials: "include" };
+
+    const params = {
+      api: `${config.ip}/api/enquiry/${id}`,
+      method: "PUT",
+      body: { status },
+      credentials: "include"
+    };
+
     const res = yield call(commonApi, params);
+
     yield put(actions.updateEnquirySuccess(res));
     toast.success("Status updated successfully");
+
   } catch (error) {
-    yield put(actions.updateEnquiryFail(error.message));
-    toast.error(error.message);
+    yield put(actions.updateEnquiryFailure(error.message));
+    toast.error(error.message || "Update failed");
   }
 }
 
 export default function* enquiryWatcher() {
-  yield takeEvery(actions.getEnquiries.type, getEnquiriesSaga);
-  yield takeEvery(actions.updateEnquiry.type, updateEnquiryStatusSaga);
+  yield takeEvery(actions.getInstituteEnquiry.type, getInstituteEnquiriesSaga);
+  yield takeEvery(actions.getCourseEnquiry.type, getCourseEnquiriesSaga);
+  yield takeEvery(actions.updateEnquiry.type, updateEnquirySaga);
 }
