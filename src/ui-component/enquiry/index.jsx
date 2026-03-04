@@ -1,6 +1,9 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getInstituteEnquiry, updateEnquiry } from "../../container/enquirycontainer/slice";
+import {
+  getInstituteEnquiry,
+  updateEnquiry
+} from "../../container/enquirycontainer/slice";
 
 export default function InstituteEnquiries() {
 
@@ -19,46 +22,64 @@ export default function InstituteEnquiries() {
   if (!enquiries.length) return <p style={{ padding: "20px" }}>No enquiries found.</p>;
 
   return (
-    <div
-      style={{
-        padding: "30px",
-        backgroundColor: "#f4f6f9",
-        minHeight: "100vh"
-      }}
-    >
-      <h2
-        style={{
-          marginBottom: "25px",
-          color: "#0b2a4a",
-          fontWeight: "600"
-        }}
-      >
+    <div style={{
+      padding: "30px",
+      backgroundColor: "#f4f6f9",
+      minHeight: "100vh"
+    }}>
+      <h2 style={{
+        marginBottom: "25px",
+        color: "#0b2a4a",
+        fontWeight: "600"
+      }}>
         Institute Enquiries
       </h2>
 
-      {enquiries.map((item) => (
-        <div
-          key={item._id}
-          style={{
-            backgroundColor: "#ffffff",
-            borderRadius: "12px",
-            padding: "20px",
-            marginBottom: "20px",
-            boxShadow: "0 4px 10px rgba(0,0,0,0.08)",
-            borderLeft: "6px solid #fd7e14"
-          }}
-        >
-          <p><b style={{ color: "#0b2a4a" }}>Student Name:</b> {item?.studentId?.studentname || "N/A"}</p>
-          <p><b style={{ color: "#0b2a4a" }}>Email:</b> {item?.studentId?.email || "N/A"}</p>
-          <p><b style={{ color: "#0b2a4a" }}>Phone:</b> {item?.studentId?.phone || "N/A"}</p>
-          <p><b style={{ color: "#0b2a4a" }}>Qualification:</b> {item?.qualification || "N/A"}</p>
-          <p><b style={{ color: "#0b2a4a" }}>Course:</b> {item?.courseId?.courseName || "N/A"}</p>
-          <p><b style={{ color: "#0b2a4a" }}>Description:</b> {item?.description || "N/A"}</p>
+      {enquiries.map((item) => {
 
-          <p>
-            <b style={{ color: "#0b2a4a" }}>Status:</b>{" "}
-            <span
-              style={{
+        /* ✅ FIXED HERE */
+        const studentName =
+          item?.studentId?.studentname ||
+          item?.name ||
+          "N/A";
+
+        const studentEmail =
+          item?.studentId?.email ||
+          item?.email ||
+          "N/A";
+
+        const studentPhone =
+          item?.studentId?.phone ||
+          item?.phone ||
+          "N/A";
+
+        const courseName =
+          item?.courseId?.courseName ||
+          item?.courseId?.name ||
+          "N/A";
+
+        return (
+          <div
+            key={item._id}
+            style={{
+              backgroundColor: "#ffffff",
+              borderRadius: "12px",
+              padding: "20px",
+              marginBottom: "20px",
+              boxShadow: "0 4px 10px rgba(0,0,0,0.08)",
+              borderLeft: "6px solid #fd7e14"
+            }}
+          >
+            <p><b>Student Name:</b> {studentName}</p>
+            <p><b>Email:</b> {studentEmail}</p>
+            <p><b>Phone:</b> {studentPhone}</p>
+            <p><b>Qualification:</b> {item?.qualification || "N/A"}</p>
+            <p><b>Course:</b> {courseName}</p>
+            <p><b>Description:</b> {item?.description || "N/A"}</p>
+
+            <p>
+              <b>Status:</b>{" "}
+              <span style={{
                 padding: "5px 12px",
                 borderRadius: "20px",
                 fontSize: "13px",
@@ -68,65 +89,61 @@ export default function InstituteEnquiries() {
                     ? "#d4edda"
                     : item.status === "Rejected"
                     ? "#f8d7da"
-                    : "#fff3cd",
-                color:
-                  item.status === "Approved"
-                    ? "#040d37"
-                    : item.status === "Rejected"
-                    ? "#721c24"
-                    : "#fd7e14"
-              }}
-            >
-              {item?.status}
-            </span>
-          </p>
+                    : "#fff3cd"
+              }}>
+                {item?.status}
+              </span>
+            </p>
 
-          {item.status === "Pending" && (
-            <div style={{ marginTop: "15px" }}>
-              <button
-                onClick={() =>
-                  dispatch(updateEnquiry({
-                    id: item._id,
-                    status: "Approved"
-                  }))
-                }
-                style={{
-                  padding: "8px 18px",
-                  marginRight: "10px",
-                  borderRadius: "6px",
-                  border: "none",
-                  cursor: "pointer",
-                  backgroundColor: "#040336",
-                  color: "#fff",
-                  fontWeight: "500"
-                }}
-              >
-                Approve
-              </button>
+            {item.status === "Pending" && (
+              <div style={{ marginTop: "15px" }}>
+                <button
+                  onClick={() =>
+                    dispatch(updateEnquiry({
+                      id: item._id,
+                      status: "Approved"
+                    }))
+                  }
+                  style={approveBtn}
+                >
+                  Approve
+                </button>
 
-              <button
-                onClick={() =>
-                  dispatch(updateEnquiry({
-                    id: item._id,
-                    status: "Rejected"
-                  }))
-                }
-                style={{
-                  padding: "8px 18px",
-                  borderRadius: "6px",
-                  border: "none",
-                  cursor: "pointer",
-                  backgroundColor: "#fd7e14",
-                  color: "#fff",
-                  fontWeight: "500"
-                }}
-              >
-                Reject
-              </button>
-            </div>
-          )}
-        </div>
-      ))}
+                <button
+                  onClick={() =>
+                    dispatch(updateEnquiry({
+                      id: item._id,
+                      status: "Rejected"
+                    }))
+                  }
+                  style={rejectBtn}
+                >
+                  Reject
+                </button>
+              </div>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
+
+const approveBtn = {
+  padding: "8px 18px",
+  marginRight: "10px",
+  borderRadius: "6px",
+  border: "none",
+  cursor: "pointer",
+  backgroundColor: "#040336",
+  color: "#fff"
+};
+
+const rejectBtn = {
+  padding: "8px 18px",
+  borderRadius: "6px",
+  border: "none",
+  cursor: "pointer",
+  backgroundColor: "#fd7e14",
+  color: "#fff"
+};

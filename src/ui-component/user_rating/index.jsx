@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Table, CircularProgress, Box } from "@mui/material";
+import { Table, CircularProgress, Box, Rating } from "@mui/material";
 
 // ✅ Redux Action
 import { getRating } from "../../container/RatingContainer/slice";
@@ -13,12 +13,10 @@ export default function Feedback() {
   const dispatch = useDispatch();
 
   /* ===== REDUX STATE ===== */
-  const { list , loading } = useSelector(
-    (state) => state.rating|| {}
+  const { list, loading } = useSelector(
+    (state) => state.rating || {}
   );
 
-  console.log("list",list);
-  
   /* ===== FETCH ON LOAD ===== */
   useEffect(() => {
     dispatch(getRating());
@@ -28,11 +26,20 @@ export default function Feedback() {
   const formattedData = useMemo(() => {
     return (list || []).map((item) => ({
       _id: item._id,
-      Student: item.studentid.email,
-      course: item.courseid.courseName || "dfghj",
-      rating: item.rating || 0,
+      Student: item.studentid?.email || "-",
+      course: item.courseid?.courseName || "-",
+
+      // ⭐ Only stars (no number)
+      rating: (
+        <Rating
+          value={item.rating || 0}
+          readOnly
+          precision={0.5}
+        />
+      ),
+
       message: item.message || "-",
-      createdOn: item.submitted_at || ""
+   createdOn: item.createdAt || ""
     }));
   }, [list]);
 
@@ -47,26 +54,11 @@ export default function Feedback() {
   ];
 
   const config = {
-    Student: {
-      label: "Student",
-      type: "text"
-    },
-    course: {
-      label: "Course",
-      type: "text"
-    },
-    rating: {
-      label: "Rating",
-      type: "text"
-    },
-    message: {
-      label: "Message",
-      type: "text"
-    },
-    createdOn: {
-      label: "Date",
-      type: "date"
-    }
+    Student: { label: "Student", type: "text" },
+    course: { label: "Course", type: "text" },
+    rating: { label: "Rating", type: "custom" },
+    message: { label: "Message", type: "text" },
+    createdOn: { label: "Date", type: "date" }
   };
 
   return (
@@ -74,14 +66,12 @@ export default function Feedback() {
       <h2>Student Feedback</h2>
 
       <Table>
-        {/* ✅ Table Header */}
         <TableHead
           keys={keys}
           config={config}
           hasAction={false}
         />
 
-        {/* ✅ Loading */}
         {loading ? (
           <Box sx={{ textAlign: "center", padding: "20px" }}>
             <CircularProgress />
