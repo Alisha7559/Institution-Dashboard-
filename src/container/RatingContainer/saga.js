@@ -1,42 +1,28 @@
 import { takeEvery, call, put } from 'redux-saga/effects';
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
 import commonApi from '../api';
-import appConfig from '../../config';
-import {
-    getRatingCount,
-    getRatingCountSuccess,
-    getRatingCountFail
-} from './slice';
-
-// Base API endpoint for ratings
-const RATING_API_BASE = `${appConfig.ip}`;
+import config from '../../config';
+import * as actions from './slice';
 
 
 
-
-function* getRatingsSaga(action) {
-  const tokenData = JSON.parse(localStorage.getItem('Token'));
-  const accessToken = tokenData?.accessToken;
+/* GET COURSES */
+function* getFeedbackSaga() {
   try {
-    let params = {
-      api: `${RATING_API_BASE}/${action.payload}`,
+    const params = {
+      api: `${config.ip}/api/feedback/feedback`,
       method: 'GET',
-      successAction: actionType.getRatingCountSuccess(),
-      failAction: actionType.getRatingCountFail(),
-      authorization: 'Bearer',
-      token:  accessToken
+      authorization: 'Bearer'
     };
-   let res = yield call(commonApi, params);
+
+    const res = yield call(commonApi, params);
+  
+    yield put(actions.getRatingSuccess(res));
   } catch (error) {
-    console.error('Fetch user Feedback count failed:', error);
-
-  }
+    yield put(actions. getRatingFailure(error.message));
+    toast.error(error.message || 'Failed to load feedback');
+  }
 }
-
-
-export default function* ratingWatcher() {
-    yield takeEvery(getRatingCount.type, getRatingsSaga);
-
+export default function* feedbackWatcher() {
+   yield takeEvery(actions.getRating.type, getFeedbackSaga);
 }

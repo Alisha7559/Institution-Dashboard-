@@ -188,7 +188,7 @@ const toggleStatus = (course) => {
     <Box p={3}>
       {/* HEADER */}
       <Box display="flex" justifyContent="space-between" mb={2}>
-        <Typography variant="h5">Courses</Typography>
+        <Typography variant="h2">Courses</Typography>
         <Button variant="contained" startIcon={<AddIcon />} onClick={openAddDrawer}>
           Add New Course
         </Button>

@@ -48,8 +48,8 @@ function* userMe() {
     const params = {
       api: `${appConfig.ip}/api/profile`,
       method: 'GET',
-      successAction: actionType.userMeSuccess(),
-      failAction: actionType.userMeFail(),
+      successAction: actionType.userMeSuccess,
+      failAction: actionType.userMeFail,
       authorization: `Bearer`,
 
 

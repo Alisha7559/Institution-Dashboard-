@@ -72,7 +72,7 @@ const OrderManagement = () => {
 
   return (
     <Box p={3}>
-      <Typography variant="h5" fontWeight="bold" mb={3}>
+      <Typography variant="h2" fontWeight="bold" mb={3}>
         Order Management
       </Typography>
 

@@ -2,6 +2,7 @@ import appConfig from '../config';
   import { toast } from 'react-toastify';
 
   const commonApi = async ({ api, method, body, authorization, token }) => {
+    
     let headers = { Accept: 'application/json' };
     if (authorization === 'Bearer') headers.Authorization = `Bearer ${token}`;
     if (!(body instanceof FormData)) headers['Content-Type'] = 'application/json';
@@ -23,6 +24,7 @@ import appConfig from '../config';
         return;
       }
       throw await response.json();
+      
     }
     return response.status === 204 ? {} : await response.json();
   };

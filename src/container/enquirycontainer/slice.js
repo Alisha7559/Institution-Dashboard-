@@ -1,100 +1,88 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
+const initialState = {
+  list: [],
+  count: 0,
+  loading: false,
+  error: null
+};
 
 const enquirySlice = createSlice({
-
-  name: 'enquiry',
-
-  initialState: {
-
-    enquiries: [],
-
-    loading: false,
-
-    error: null
-
-  },
-
+  name: "enquiry",
+  initialState,
   reducers: {
 
-    /* ===== GET ENQUIRIES ===== */
+    /* ================= GET ENQUIRIES ================= */
 
-    getEnquiries: state => {
-
+    getInstituteEnquiry: (state) => {
       state.loading = true;
-
       state.error = null;
-
     },
 
-    getEnquiriesSuccess: (state, action) => {
-
-      state.loading = false;
-
-      state.enquiries = action.payload;
-
+    getCourseEnquiry: (state) => {
+      state.loading = true;
+      state.error = null;
     },
 
-    getEnquiriesFail: (state, action) => {
+    getEnquirySuccess: (state, action) => {
+  state.loading = false;
 
+  if (Array.isArray(action.payload)) {
+    state.list = action.payload;
+    state.count = action.payload.length;
+  } 
+  else if (Array.isArray(action.payload?.data)) {
+    state.list = action.payload.data;
+    state.count = action.payload.count || action.payload.data.length;
+  } 
+  else {
+    state.list = [];
+    state.count = 0;
+  }
+},
+
+    getEnquiryFailure: (state, action) => {
       state.loading = false;
-
       state.error = action.payload;
-
     },
 
+    /* ================= UPDATE STATUS ================= */
 
-
-    /* ===== UPDATE STATUS ===== */
-
-    updateEnquiry: state => {
-
+    updateEnquiry: (state) => {
       state.loading = true;
-
       state.error = null;
-
     },
 
     updateEnquirySuccess: (state, action) => {
-
       state.loading = false;
 
-      const index = state.enquiries.findIndex(
+      const updated = action.payload?.data || action.payload;
 
-        e => e._id === action.payload._id
-
+      const index = state.list.findIndex(
+        (item) => item._id === updated._id
       );
 
-      if (index !== -1)
-
-        state.enquiries[index] = action.payload;
-
+      if (index !== -1) {
+        state.list[index] = updated;
+      }
     },
 
-    updateEnquiryFail: (state, action) => {
-
+    updateEnquiryFailure: (state, action) => {
       state.loading = false;
-
       state.error = action.payload;
-
     }
 
   }
-
 });
 
-
 export const {
-
-  getEnquiries,
-  getEnquiriesSuccess,
-  getEnquiriesFail,
-
+  getInstituteEnquiry,
+  getCourseEnquiry,
+  getEnquirySuccess,
+  getEnquiryFailure,
   updateEnquiry,
   updateEnquirySuccess,
-  updateEnquiryFail
-
+  updateEnquiryFailure
 } = enquirySlice.actions;
-
 
 export default enquirySlice.reducer;
