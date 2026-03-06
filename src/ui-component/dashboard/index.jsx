@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Grid, Typography, Box } from '@mui/material';
 import { UserOutlined } from '@ant-design/icons';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
 import AnalyticsCard from './AnalyticsCard';
-
+import ProfileModal from "./ProfileModal";
 // import { getFacilitiesCount,  } from 'container/FacilityContainer/slice';
 // import { getIssuesCount, } from 'container/ReportIssuesContainer/slice';
 // import { getRatings, } from 'container/RatingContainer/slice';
@@ -11,11 +11,22 @@ import AnalyticsCard from './AnalyticsCard';
 // import { dashCount } from 'container/DashboardContainer/slice';
 import MainCard from 'ui-component/cards/MainCard';
 
+
 const DashboardDefault = () => {
   const dispatch = useDispatch();
+  const { userData } = useSelector((state) => state.login);
+  const [showModal, setShowModal] = useState(false);
   const [limit] = useState(5);
   const [page] = useState(0);
 
+  // ✅ Profile check effect (SEPARATE)
+  useEffect(() => {
+    if (userData && userData.isProfileCompleted === false) {
+      setShowModal(true);
+    }
+  }, [userData]);
+
+  // ✅ Dashboard data effect (SEPARATE)
   useEffect(() => {
     const urls = {
       facilities: `facilities?filter={"limit":${limit},"skip":${page},"order":["createdOn DESC"]}`,
@@ -29,6 +40,10 @@ const DashboardDefault = () => {
         where: { status: 'draft' }
       })
     )}`;
+
+    // dispatch calls here
+
+
 
     // dispatch(getFacilitiesCount('facilities/count'));
     // dispatch(getFacilities(urls.facilities));
@@ -83,6 +98,13 @@ const DashboardDefault = () => {
         {/* Main Analytics Section */}
         <AnalyticsCard />
       </Box>
+      {/* 👇 ADD MODAL AT BOTTOM */}
+      {showModal && (
+        <ProfileModal
+          user={userData}
+          onClose={() => setShowModal(false)}
+        />
+      )}
     </MainCard>
   );
 };

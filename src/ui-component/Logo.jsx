@@ -8,7 +8,7 @@ function Logo() {
       <img src={NavLogo} alt="NXTSTEP" loading="lazy" height={70} />
       </div>
     <div>
-    <span style={{color:"orange",fontFamily:"Elegant Serif",fontSize:"22px",}}>NXTSTEP</span>
+    <span style={{color:"#ea580c",fontFamily:"Elegant Serif",fontSize:"22px",}}>NXTSTEP</span>
     <p style={{color:"white",fontFamily:"Spaced serif ",margin:"0"}}>Design Your Future</p>
     </div>
     </>

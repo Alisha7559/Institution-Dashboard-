@@ -16,41 +16,40 @@ import {
   TableRow,
   Chip,
   Paper,
-  CircularProgress,
-  LinearProgress
+  CircularProgress
 } from "@mui/material";
 
 import EventSeatIcon from "@mui/icons-material/EventSeat";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CancelIcon from "@mui/icons-material/Cancel";
 
-const statusColor = {
-  Available: "success",
-  Limited: "warning",
-  Full: "error"
+/* THEME COLORS */
+const colors = {
+  primary: "#ea580c",
+  dark: "#0f172a",
+  white: "#ffffff",
+  light: "#f1f5f9"
 };
 
 const SeatManagement = () => {
+
   const dispatch = useDispatch();
 
   const { courses = [], loading } = useSelector(
     (state) => state.course || {}
   );
 
-  /* ===== FETCH COURSES ===== */
   useEffect(() => {
     dispatch(getCourses());
   }, [dispatch]);
 
-  /* ===== DERIVED SEAT DATA ===== */
   const seatData = useMemo(() => {
+
     let totalSeats = 0;
     let filledSeats = 0;
 
     const courseSeats = courses.map((course) => {
+
       const total = Number(course.totalSeats) || 0;
 
-      // ✅ Real filled seats logic
       const filled = course.enrolledStudents
         ? course.enrolledStudents.length
         : 0;
@@ -69,9 +68,9 @@ const SeatManagement = () => {
         total,
         filled,
         vacant,
-        status,
-        percentage: total > 0 ? (filled / total) * 100 : 0
+        status
       };
+
     });
 
     return {
@@ -80,110 +79,224 @@ const SeatManagement = () => {
       vacantSeats: totalSeats - filledSeats,
       courseSeats
     };
+
   }, [courses]);
 
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" mt={6}>
-        <CircularProgress />
+        <CircularProgress sx={{ color: colors.primary }} />
       </Box>
     );
   }
 
   return (
-    <Box p={3}>
-      <Typography variant="h5" fontWeight="bold" mb={3}>
+    <Box p={4} bgcolor={colors.light} minHeight="100vh">
+
+      <Typography
+        variant="h2"
+        fontWeight="bold"
+        mb={4}
+        color={colors.dark}
+      >
         Seat Management
       </Typography>
 
       {/* ===== TOP STATS ===== */}
-      <Grid container spacing={3} mb={3}>
+
+      <Grid container spacing={3} mb={4}>
+
+        {/* TOTAL */}
+
         <Grid item xs={12} md={4}>
-          <Card sx={{ display: "flex", alignItems: "center", p: 2 }}>
-            <EventSeatIcon fontSize="large" color="primary" />
-            <CardContent>
-              <Typography variant="subtitle2">Total Seats</Typography>
-              <Typography variant="h6">{seatData.totalSeats}</Typography>
+          <Card
+            sx={{
+              backgroundColor: colors.dark,
+              borderLeft: `5px solid ${colors.primary}`,
+              borderRadius: 3
+            }}
+          >
+            <CardContent sx={{ display: "flex", alignItems: "center" }}>
+              <EventSeatIcon sx={{ mr: 2, color: colors.primary}} />
+
+              <Box>
+                <Typography variant="body2" sx={{ color: colors.white }}>
+                  Total Seats
+                </Typography>
+
+                <Typography
+                  variant="h4"
+                  fontWeight="bold"
+                  sx={{ color: colors.white }}
+                >
+                  {seatData.totalSeats}
+                </Typography>
+
+              </Box>
             </CardContent>
           </Card>
         </Grid>
 
+        {/* FILLED */}
+
         <Grid item xs={12} md={4}>
-          <Card sx={{ display: "flex", alignItems: "center", p: 2 }}>
-            <CheckCircleIcon fontSize="large" color="success" />
-            <CardContent>
-              <Typography variant="subtitle2">Filled Seats</Typography>
-              <Typography variant="h6">{seatData.filledSeats}</Typography>
+          <Card
+            sx={{
+              backgroundColor: colors.dark,
+              borderLeft: `5px solid ${colors.primary}`,
+              borderRadius: 3
+            }}
+          >
+            <CardContent sx={{ display: "flex", alignItems: "center" }}>
+              <EventSeatIcon sx={{ mr: 2, color: colors.primary }} />
+
+              <Box>
+                <Typography variant="body2" sx={{ color: colors.white }}>
+                  Filled Seats
+                </Typography>
+
+                <Typography
+                  variant="h4"
+                  fontWeight="bold"
+                  sx={{ color: colors.white }}
+                >
+                  {seatData.filledSeats}
+                </Typography>
+
+              </Box>
             </CardContent>
           </Card>
         </Grid>
 
+        {/* VACANT */}
+
         <Grid item xs={12} md={4}>
-          <Card sx={{ display: "flex", alignItems: "center", p: 2 }}>
-            <CancelIcon fontSize="large" color="warning" />
-            <CardContent>
-              <Typography variant="subtitle2">Vacant Seats</Typography>
-              <Typography variant="h6">{seatData.vacantSeats}</Typography>
+          <Card
+            sx={{
+              backgroundColor: colors.dark,
+              borderLeft: `5px solid ${colors.primary}`,
+              borderRadius: 3
+            }}
+          >
+            <CardContent sx={{ display: "flex", alignItems: "center" }}>
+              <EventSeatIcon sx={{ mr: 2, color: colors.primary }} />
+
+              <Box>
+                <Typography variant="body2" sx={{ color: colors.white }}>
+                  Vacant Seats
+                </Typography>
+
+                <Typography
+                  variant="h4"
+                  fontWeight="bold"
+                  sx={{ color: colors.white }}
+                >
+                  {seatData.vacantSeats}
+                </Typography>
+
+              </Box>
             </CardContent>
           </Card>
         </Grid>
+
       </Grid>
 
       {/* ===== COURSE TABLE ===== */}
-      <Card>
+
+      <Card
+        sx={{
+          borderRadius: 3,
+          borderLeft: `6px solid ${colors.primary}`
+        }}
+      >
+
         <CardContent>
-          <Typography variant="h6" fontWeight="bold" mb={2}>
+
+          <Typography
+            variant="h3"
+            fontWeight="bold"
+            mb={3}
+            color={colors.dark}
+          >
             Course-wise Seat Allocation
           </Typography>
 
           <TableContainer component={Paper} elevation={0}>
+
             <Table>
-              <TableHead>
+
+              {/* HEADER */}
+
+              <TableHead sx={{ backgroundColor: "#f8fafc" }}>
                 <TableRow>
-                  <TableCell><b>Course Name</b></TableCell>
+
+                  <TableCell><b>Course</b></TableCell>
                   <TableCell align="center"><b>Total</b></TableCell>
                   <TableCell align="center"><b>Filled</b></TableCell>
                   <TableCell align="center"><b>Vacant</b></TableCell>
-                  <TableCell align="center"><b>Progress</b></TableCell>
                   <TableCell align="center"><b>Status</b></TableCell>
+
                 </TableRow>
               </TableHead>
 
+              {/* BODY */}
+
               <TableBody>
+
                 {seatData.courseSeats.map((course, index) => (
+
                   <TableRow key={index}>
+
                     <TableCell>{course.name}</TableCell>
-                    <TableCell align="center">{course.total}</TableCell>
-                    <TableCell align="center">{course.filled}</TableCell>
-                    <TableCell align="center">{course.vacant}</TableCell>
-                    <TableCell align="center" sx={{ width: 200 }}>
-                      <LinearProgress
-                        variant="determinate"
-                        value={course.percentage}
-                      />
-                    </TableCell>
+
                     <TableCell align="center">
+                      {course.total}
+                    </TableCell>
+
+                    <TableCell align="center">
+                      {course.filled}
+                    </TableCell>
+
+                    <TableCell align="center">
+                      {course.vacant}
+                    </TableCell>
+
+                    <TableCell align="center">
+
                       <Chip
                         label={course.status}
-                        color={statusColor[course.status]}
+                        sx={{
+                          backgroundColor: colors.dark,
+                          color: colors.white,
+                          fontWeight: "bold"
+                        }}
                         size="small"
                       />
+
                     </TableCell>
+
                   </TableRow>
+
                 ))}
 
                 {seatData.courseSeats.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={6} align="center">
+                    <TableCell colSpan={5} align="center">
                       No courses found
                     </TableCell>
                   </TableRow>
                 )}
+
               </TableBody>
+
             </Table>
+
           </TableContainer>
+
         </CardContent>
+
       </Card>
+
     </Box>
   );
 };

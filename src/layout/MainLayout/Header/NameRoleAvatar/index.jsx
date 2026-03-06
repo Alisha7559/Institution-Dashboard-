@@ -6,6 +6,9 @@ import ProfileSection from 'layout/MainLayout/Header/ProfileSection';
 
 import { userMe } from 'container/LoginContainer/slice';
 
+import { useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
+
 const stringAvatar = (name) => ({
   sx: {
     bgcolor: '#ffffff54',
@@ -31,6 +34,7 @@ export default function BackgroundLetterAvatars() {
   const userData = useSelector((state) => state?.login?.userData || {});
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  const navigate = useNavigate();
 
   console.log("userData",userData);
   
@@ -50,13 +54,26 @@ export default function BackgroundLetterAvatars() {
   };
 
   // Extract user info
-  const name = userData?.name 
-  const email = userData.email
-  const phone = userData?.phone || 'N/A';
-  const role = userData?.role || 'N/A';
-  const status = userData?.status || 'N/A';
-  const district = userData?.district || 'N/A';
-  const userType = userData?.userType || 'N/A';
+ const name =
+  userData?.institutionName ||
+  userData?.name ||
+  'N/A';
+
+const email =
+  userData?.officialEmail ||
+  userData?.email ||
+  'N/A';
+
+const phone =
+  userData?.officialPhone ||
+  'N/A';
+
+const role = userData?.institutionType || 'Institution';
+
+const status =
+  userData?.isProfileCompleted
+    ? 'Verified'
+    : 'Incomplete';
 
   return (
     <>
@@ -116,11 +133,11 @@ export default function BackgroundLetterAvatars() {
         }}
       >
         <Stack direction="column" alignItems="center" spacing={1.2}>
-          <Avatar {...stringAvatar(name)} sx={{ width: 60, height: 60, bgcolor: '#34699c', color: '#fff' }} />
-          <Typography variant="subtitle1" sx={{ fontWeight: 600, color: '#364152' }}>
+          <Avatar {...stringAvatar(name)} sx={{ width: 60, height: 60, bgcolor: '#ea580c', color: '#fff' }} />
+          <Typography variant="subtitle1" sx={{ fontWeight: 600, color: '#0f172a' }}>
             {name}
           </Typography>
-          <Typography variant="body2" sx={{ color: '#364152' }}>
+          <Typography variant="body2" sx={{ color: '#0f172a' }}>
             {role
               .replace(/([A-Z])/g, ' $1') // Add space before capital letters
               .replace(/\b\w/g, (char) => char.toUpperCase()) // Capitalize first letter of each word
@@ -137,11 +154,7 @@ export default function BackgroundLetterAvatars() {
             <Typography variant="body2" sx={{ color: '#364152', mb: 0.5 }}>
               <strong>Phone:</strong> {phone}
             </Typography>
-            {district !== 'N/A' && (
-              <Typography variant="body2" sx={{ color: '#364152', mb: 0.5 }}>
-                <strong>District:</strong> {district}
-              </Typography>
-            )}
+            
             {/* <Typography variant="body2" sx={{ color: '#364152', mb: 0.5 }}>
               <strong>User Type:</strong> {userType}
             </Typography> */}
@@ -149,13 +162,24 @@ export default function BackgroundLetterAvatars() {
               <strong>Status:</strong>{' '}
               <span
                 style={{
-                  color: status === 'active' ? '#22c55e' : '#ef4444',
+                  color: status === 'active' ? '#22c55e' : '#22c55e',
                   fontWeight: 600,
                   textTransform: 'capitalize'
                 }}
               >
                 {status}
               </span>
+              <Button
+  fullWidth
+  variant="contained"
+  sx={{ mt: 2, backgroundColor: "#0f172a" }}
+  onClick={() => {
+    handleClose();
+    navigate("institution-profile");
+  }}
+>
+  View Profile
+</Button>
             </Typography>
           </Box>
         </Stack>

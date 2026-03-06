@@ -5,6 +5,7 @@ import config from "../../config";
 import * as actions from "./slice";
 
 /* ================= GET INSTITUTE ENQUIRIES ================= */
+
 function* getInstituteEnquiriesSaga() {
   try {
     const params = {
@@ -24,6 +25,7 @@ function* getInstituteEnquiriesSaga() {
 }
 
 /* ================= GET COURSE ENQUIRIES ================= */
+
 function* getCourseEnquiriesSaga(action) {
   try {
     const { courseId } = action.payload;
@@ -45,6 +47,7 @@ function* getCourseEnquiriesSaga(action) {
 }
 
 /* ================= UPDATE STATUS ================= */
+
 function* updateEnquirySaga(action) {
   try {
     const { id, status } = action.payload;
@@ -67,8 +70,54 @@ function* updateEnquirySaga(action) {
   }
 }
 
+/* ================= DELETE ENQUIRY ================= */
+
+function* deleteEnquirySaga(action) {
+  try {
+
+    const id = action.payload;
+
+    const params = {
+      api: `${config.ip}/api/enquiry/${id}`,
+      method: "DELETE",
+      credentials: "include"
+    };
+
+    yield call(commonApi, params);
+
+    yield put(actions.deleteEnquirySuccess(id));
+
+    toast.success("Enquiry deleted successfully");
+
+  } catch (error) {
+
+    yield put(actions.deleteEnquiryFailure(error.message));
+
+    toast.error(error.message || "Delete failed");
+  }
+}
+
+/* ================= WATCHER ================= */
+
 export default function* enquiryWatcher() {
-  yield takeEvery(actions.getInstituteEnquiry.type, getInstituteEnquiriesSaga);
-  yield takeEvery(actions.getCourseEnquiry.type, getCourseEnquiriesSaga);
-  yield takeEvery(actions.updateEnquiry.type, updateEnquirySaga);
+
+  yield takeEvery(
+    actions.getInstituteEnquiry.type,
+    getInstituteEnquiriesSaga
+  );
+
+  yield takeEvery(
+    actions.getCourseEnquiry.type,
+    getCourseEnquiriesSaga
+  );
+
+  yield takeEvery(
+    actions.updateEnquiry.type,
+    updateEnquirySaga
+  );
+
+  yield takeEvery(
+    actions.deleteEnquiry.type,
+    deleteEnquirySaga
+  );
 }

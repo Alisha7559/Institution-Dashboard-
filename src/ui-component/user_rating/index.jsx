@@ -1,11 +1,18 @@
 import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Table, CircularProgress, Box, Rating } from "@mui/material";
+import {
+  Table,
+  CircularProgress,
+  Box,
+  Rating,
+  Paper,
+  Typography
+} from "@mui/material";
 
-// ✅ Redux Action
+// Redux Action
 import { getRating } from "../../container/RatingContainer/slice";
 
-// ✅ Custom Table Components
+// Custom Table Components
 import TableHead from "../../utils/TableHead";
 import TableRows from "../../utils/TableRows";
 
@@ -13,11 +20,9 @@ export default function Feedback() {
   const dispatch = useDispatch();
 
   /* ===== REDUX STATE ===== */
-  const { list, loading } = useSelector(
-    (state) => state.rating || {}
-  );
+  const { list, loading } = useSelector((state) => state.rating || {});
 
-  /* ===== FETCH ON LOAD ===== */
+  /* ===== FETCH DATA ===== */
   useEffect(() => {
     dispatch(getRating());
   }, [dispatch]);
@@ -29,7 +34,6 @@ export default function Feedback() {
       Student: item.studentid?.email || "-",
       course: item.courseid?.courseName || "-",
 
-      // ⭐ Only stars (no number)
       rating: (
         <Rating
           value={item.rating || 0}
@@ -39,11 +43,11 @@ export default function Feedback() {
       ),
 
       message: item.message || "-",
-   createdOn: item.createdAt || ""
+      createdOn: item.createdAt || ""
     }));
   }, [list]);
 
-  /* ========= TABLE CONFIG ========= */
+  /* ===== TABLE CONFIG ===== */
 
   const keys = [
     "Student",
@@ -62,33 +66,53 @@ export default function Feedback() {
   };
 
   return (
-    <Box sx={{ padding: "20px" }}>
-      <h2>Student Feedback</h2>
+    <Box
+      sx={{
+        backgroundColor: "rgb(230, 237, 248)",
+        minHeight: "100vh",
+        padding: "30px"
+      }}
+    >
+      <Paper
+        elevation={3}
+        sx={{
+          borderRadius: "12px",
+          padding: "25px",
+          borderLeft: "6px solid #ff6a00"
+        }}
+      >
+        <Typography
+          variant="h2"
+          sx={{ fontWeight: 600, marginBottom: "20px" }}
+        >
+          Student Feedback
+        </Typography>
 
-      <Table>
-        <TableHead
-          keys={keys}
-          config={config}
-          hasAction={false}
-        />
-
-        {loading ? (
-          <Box sx={{ textAlign: "center", padding: "20px" }}>
-            <CircularProgress />
-          </Box>
-        ) : (
-          <TableRows
-            data={formattedData}
+        <Table>
+          <TableHead
             keys={keys}
             config={config}
-            currentPage={1}
-            tableLimit={10}
-            hasActionRow={false}
-            slNo={true}
-            msg="No Feedback Found"
+            hasAction={false}
           />
-        )}
-      </Table>
+
+          {loading ? (
+            <Box sx={{ textAlign: "center", padding: "20px" }}>
+              <CircularProgress />
+            </Box>
+          ) : (
+            <TableRows
+              data={formattedData}
+              keys={keys}
+              config={config}
+              currentPage={1}
+              tableLimit={10}
+              hasActionRow={false}
+              slNo={true}
+              msg="No Feedback Found"
+            />
+          )}
+        </Table>
+      </Paper>
     </Box>
   );
 }

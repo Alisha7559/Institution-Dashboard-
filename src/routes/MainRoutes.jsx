@@ -6,6 +6,9 @@ import MainLayout from 'layout/MainLayout';
 import Loadable from 'ui-component/Loadable';
 import AuthGuard from 'utils/authGuard';
 
+import InstitutionProfile from 'ui-component/institution-profile';
+// dashboard routing
+
 // Pages
 const DashboardDefault = Loadable(lazy(() => import('ui-component/dashboard')));
 const Course = Loadable(lazy(() => import('ui-component/courses')));
@@ -22,15 +25,17 @@ const UserRatingPage = Loadable(
 const MainRoutes = {
   path: '/',
   element: (
-    <AuthGuard user={['Vendor', 'Surveyor', 'Requester']}>
+    <AuthGuard user={['Vendor', 'Surveyor', 'Requester','Institution']}>
       <MainLayout />
     </AuthGuard>
   ),
   children: [
+    
     {
-      path: '',
-      element: <Navigate to="dashboard" replace />
-    },
+  path: '',
+  element: <Navigate to="/login" replace />
+},
+   
 
     {
       path: 'dashboard',
@@ -65,7 +70,15 @@ const MainRoutes = {
     {
       path: 'rating',
       element: <UserRatingPage />
-    }
+
+    },
+    {
+  path: 'institution-profile',
+  element: <InstitutionProfile />
+}
+
+    
+
 
   ]
 };

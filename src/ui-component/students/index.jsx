@@ -41,7 +41,7 @@ export default function Students() {
         alignItems="center"
         mb={3}
       >
-        <Typography variant="h4" fontWeight={600}>
+        <Typography variant="h2" fontWeight={600}>
           Students
         </Typography>
 

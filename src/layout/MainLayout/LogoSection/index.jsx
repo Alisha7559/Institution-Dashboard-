@@ -21,4 +21,5 @@ const LogoSection = () => {
   );
 };
 
+
 export default LogoSection;

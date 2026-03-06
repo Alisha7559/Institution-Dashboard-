@@ -42,11 +42,13 @@ const initialForm = {
   mode: 'Online',
   fees: '',
   totalSeats: '',
+  duration:'',
+  skills:'',
   location: '',
   modules: [],
   description: '',
   status: 'Active',
-  approval: 'Pending',
+  
   institution: '',
   images: []
 };
@@ -98,6 +100,8 @@ const CoursesDashboard = () => {
       mode: course.mode || 'Online',
       fees: course.fees || '',
       totalSeats: course.totalSeats || '',
+       duration: course.duration || '',
+        skills: course.skills|| '',
       location: course.location || '',
       modules: course.modules || [],
       description: course.description || '',
@@ -142,6 +146,8 @@ const CoursesDashboard = () => {
     form.append("approval", formData.approval);
     form.append("location", formData.location);
     form.append("description", formData.description);
+    form.append("duration", formData.duration);
+    form.append("skills", formData.skills);
     form.append("modules", JSON.stringify(formData.modules));
     // important part
     formData.images.forEach((img) => {
@@ -167,18 +173,22 @@ const CoursesDashboard = () => {
     setOpen(false);
   };
 
-  const toggleStatus = (course) => {
-    dispatch(updateCourse({
-      ...course,
+const toggleStatus = (course) => {
+  dispatch(updateCourse({
+    id: course._id,
+    form: {
       status: course.status === 'Active' ? 'Inactive' : 'Active'
-    }));
-  };
+    }
+  }));
+};
+
 
   return (
+    
     <Box p={3}>
       {/* HEADER */}
       <Box display="flex" justifyContent="space-between" mb={2}>
-        <Typography variant="h5">Courses</Typography>
+        <Typography variant="h2">Courses</Typography>
         <Button variant="contained" startIcon={<AddIcon />} onClick={openAddDrawer}>
           Add New Course
         </Button>
@@ -347,8 +357,11 @@ const CoursesDashboard = () => {
           <TextField fullWidth label="Fees ₹" name="fees" type="number" value={formData.fees} onChange={handleChange} margin="normal" />
           <TextField fullWidth label="Seats" name="totalSeats" type="number" value={formData.totalSeats} onChange={handleChange} margin="normal" />
 
-          {/* Location */}
+          {/* Location Duration skills*/}
           <TextField fullWidth label="Location" name="location" value={formData.location} onChange={handleChange} margin="normal" />
+            <TextField fullWidth label="Duration" name="duration" value={formData.duration} onChange={handleChange} margin="normal" />
+              <TextField fullWidth label="Skills" name="skills" value={formData.skills} onChange={handleChange} margin="normal" />
+
 
           {/* Modules */}
           <FormControl fullWidth margin="normal">
