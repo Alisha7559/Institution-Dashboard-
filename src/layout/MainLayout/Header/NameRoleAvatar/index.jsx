@@ -91,12 +91,12 @@ const status =
         <Typography sx={{ color: '#fff', fontWeight: 300 }}>{}</Typography>
 
         {/* Right side: Avatar + Info + Dropdown */}
-        <Stack direction="row" alignItems="center" spacing={2}>
-          <Avatar onClick={handleAvatarClick}  sx={{ cursor: 'pointer' }}/>
+        <Stack direction="row" alignItems="center" spacing={2} >
+          <Avatar onClick={handleAvatarClick}  sx={{ cursor: 'pointer', color:'#ea580c' ,backgroundColor:'#0f172a'}}/>
 
           <Box sx={{ ml: 1 }}>
-            <Typography variant="body1" sx={{ color: 'white', fontWeight: 500 }}>
-              {name}
+            <Typography variant="body1" sx={{ color: 'white', fontWeight: 500  }}>
+              {name .replace(/\b\w/g, (char) => char.toUpperCase())}
             </Typography>
 
             <Typography variant="body2" sx={{ color: '#a0bfed' }}>
@@ -135,7 +135,7 @@ const status =
         <Stack direction="column" alignItems="center" spacing={1.2}>
           <Avatar {...stringAvatar(name)} sx={{ width: 60, height: 60, bgcolor: '#ea580c', color: '#fff' }} />
           <Typography variant="subtitle1" sx={{ fontWeight: 600, color: '#0f172a' }}>
-            {name}
+            {name .replace(/\b\w/g, (char) => char.toUpperCase())}
           </Typography>
           <Typography variant="body2" sx={{ color: '#0f172a' }}>
             {role
