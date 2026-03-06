@@ -44,8 +44,8 @@ const ProfileModal = ({ user = {}, mode = "create", onClose }) => {
     institutionType: "",
     yearEstablished: "",
     registrationNumber: "",
-    // accreditationAuthority: "",
-    // gstNumber: "",
+    accreditationAuthority: "",
+    gstNumber: "",
     officialEmail: "",
     officialPhone: "",
     website: "",
@@ -69,8 +69,8 @@ const ProfileModal = ({ user = {}, mode = "create", onClose }) => {
       institutionType: user?.institutionType || "",
       yearEstablished: user?.yearEstablished || "",
       registrationNumber: user?.registrationNumber || "",
-      // accreditationAuthority: user?.accreditationAuthority || "",
-      // gstNumber: user?.gstNumber || "",
+      accreditationAuthority: user?.accreditationAuthority || "",
+      gstNumber: user?.gstNumber || "",
       officialEmail: user?.officialEmail || "",
       officialPhone: user?.officialPhone || "",
       website: user?.website || "",
@@ -253,6 +253,10 @@ const ProfileModal = ({ user = {}, mode = "create", onClose }) => {
               <Grid item xs={6}><TextField fullWidth label="Official Email" value={form.officialEmail} onChange={handleChange("officialEmail")} required={mode === "create"} /></Grid>
               <Grid item xs={6}><TextField fullWidth label="Official Phone" value={form.officialPhone} onChange={handleChange("officialPhone")} required={mode === "create"} /></Grid>
               <Grid item xs={12}><TextField fullWidth label="Website" value={form.website} onChange={handleChange("website")} /></Grid>
+              <Grid item xs={12}><TextField fullWidth label="Accreditation Authority" value={form.accreditationAuthority} onChange={handleChange("accreditationAuthority")} /></Grid>
+              <Grid item xs={12}><TextField fullWidth label="GstNumber" value={form.gstNumber} onChange={handleChange("gstNumber")} /></Grid>
+
+
             </Grid>
 
             <Divider sx={{ my: 3 }} />

@@ -1,76 +1,114 @@
+
 import React from 'react';
-import { Grid, Box } from '@mui/material';
+import { Grid, Paper, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { blueGrey } from '@mui/material/colors';
-import { UserOutlined, HomeOutlined, WarningOutlined, MessageOutlined } from '@ant-design/icons';
-import Card from './card';
-// import { DetailCard } from './DetailCard';
-import { ClockCircleOutlined } from '@ant-design/icons';
+import { useState,useEffect } from 'react'
+import axios from "axios";
+import {
+  BookOutlined,
+  TeamOutlined,
+  QuestionCircleOutlined,
+  AppstoreOutlined
+} from '@ant-design/icons';
 
 const AnalyticsCard = () => {
-  const facilityList = useSelector((state) => state.facility?.list || []);
-  const issueList = useSelector((state) => state.reportIssue?.list || []);
-  const feedbackList = useSelector((state) => state.rating?.list || []);
-  const usersList = useSelector((state) => state.user?.list || []);
-  const dashCount = useSelector((state) => state?.dashboard?.dashCount);
-  const draftFacilities = useSelector((state) => state.facility?.draftList || []);
 
-  const draftCount = draftFacilities.length;
+  const courses = useSelector((state) => state.course?.courses || []);
+const [students, setStudents] = useState([]);
 
-  console.log('FacilityList in Dashboar = ', facilityList);
+useEffect(() => {
+  axios
+    .get("http://localhost:7000/api/institution-students", { withCredentials: true })
+    .then((res) => setStudents(res.data))
+    .catch((err) => console.log(err));
+}, []);  const enquiry = useSelector((state) => state.enquiry?.list || []);
+const seatmanagement = useSelector((state) => state.seatManagement?.seats || []);
 
-  const counts = {
-    facilities: useSelector((state) => state.facility?.listCount || 0),
-    issues: useSelector((state) => state.reportIssue?.listCount || 0),
-    feedback: useSelector((state) => state?.rating?.listCount || 0),
-    users: useSelector((state) => state.user?.listCount || 0)
+  const cardStyle = {
+    p: 3,
+    borderRadius: 4,
+    background: "#0f172a",
+    borderLeft: "5px solid #ea580c",
+    boxShadow: 3,
+    color: "#fff",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    transition: "0.3s",
+    "&:hover": {
+      transform: "translateY(-5px)"
+    }
+  };
+
+  const iconStyle = {
+    fontSize: 30,
+    color: "#ea580c"
   };
 
   return (
-    <Grid container item xs={12} spacing={2.5}>
-      {/* ================== ROW 1 : 5 SMALL CARDS ================== */}
-      <Grid item xs={12}>
-        <Grid container spacing={2.5}>
-          <Grid item xs={12} sm={6} md={2.4}>
-            <Link to="/userManagment" style={{ textDecoration: 'none' }}>
-              <Card title="Active Users" count={1} color="#2055a8" bgTheme="#e3f2fd" icon={<UserOutlined />} />
-            </Link>
-          </Grid>
+    <Grid container spacing={3} mb={4} >
 
-          <Grid item xs={12} sm={6} md={2.4}>
-            <Link to="/facility" style={{ textDecoration: 'none' }}>
-              <Card title="Active Facilities" count={10} color="#006064" bgTheme="#e0f7fa" icon={<HomeOutlined />} />
-            </Link>
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={2.4}>
-            <Link to="/facility" style={{ textDecoration: 'none' }}>
-              <Card
-                title="Draft Facilities"
-                count={draftCount}
-                color="#546E7A" // Blue-grey text/icon
-               bgTheme="#ECEFF1"// Soft blue-grey background
-                icon={<ClockCircleOutlined />}
-              />
-            </Link>
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={2.4}>
-            <Link to="/reportedIssues" style={{ textDecoration: 'none' }}>
-              <Card title="Open Issues" count={11} color="#e83766" bgTheme="#e837661c" icon={<WarningOutlined />} />
-            </Link>
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={2.4}>
-            <Link to="/rating" style={{ textDecoration: 'none' }}>
-              <Card title="Feedback" count={200} color="#5E35B1" bgTheme="#EDE7F6" icon={<MessageOutlined />} />
-            </Link>
-          </Grid>
-        </Grid>
+      {/* COURSES */}
+      <Grid item xs={12} sm={6} md={3}>
+        <Link to="/courses" style={{ textDecoration: 'none' }}>
+          <Paper sx={cardStyle}>
+            <div>
+              <Typography variant="h4" fontWeight={700} color={ "#fff"}>
+                {courses.length}
+              </Typography>
+              <Typography>Courses</Typography>
+            </div>
+            <BookOutlined style={iconStyle} />
+          </Paper>
+        </Link>
       </Grid>
 
-   
+      {/* STUDENTS */}
+      <Grid item xs={12} sm={6} md={3}>
+        <Link to="/students" style={{ textDecoration: 'none' }}>
+          <Paper sx={cardStyle}>
+            <div>
+              <Typography variant="h4" fontWeight={700} color={ "#fff"}>
+                {students.length}
+              </Typography>
+              <Typography>Students</Typography>
+            </div>
+            <TeamOutlined style={iconStyle} />
+          </Paper>
+        </Link>
+      </Grid>
+
+      {/* ENQUIRIES */}
+      <Grid item xs={12} sm={6} md={3}>
+        <Link to="/enquiry" style={{ textDecoration: 'none' }}>
+          <Paper sx={cardStyle}>
+            <div>
+              <Typography variant="h4" fontWeight={700} color={ "#fff"}>
+                {enquiry.length}
+              </Typography>
+              <Typography>Enquiries</Typography>
+            </div>
+            <QuestionCircleOutlined style={iconStyle} />
+          </Paper>
+        </Link>
+      </Grid>
+
+      {/* SEAT MANAGEMENT */}
+      <Grid item xs={12} sm={6} md={3}>
+        <Link to="/seat-management" style={{ textDecoration: 'none' }}>
+          <Paper sx={cardStyle}>
+            <div>
+              <Typography variant="h4" fontWeight={700} color={ "#fff"}>
+                {seatmanagement.length}
+              </Typography>
+              <Typography>Seat Management</Typography>
+            </div>
+            <AppstoreOutlined style={iconStyle} />
+          </Paper>
+        </Link>
+      </Grid>
+
     </Grid>
   );
 };

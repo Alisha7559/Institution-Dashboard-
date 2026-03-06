@@ -58,7 +58,16 @@ const DashboardDefault = () => {
   }, [dispatch, limit, page]);
 
   return (
-    <MainCard sx={{ boxShadow: 'none' }}>
+    <Box
+  sx={{
+    minHeight: "100vh",
+    backgroundColor: "rgb(230, 237, 248)", 
+    padding: 3
+  }}
+>
+  
+    <MainCard sx={{ boxShadow: 'none',    backgroundColor: "rgb(230, 237, 248)", 
+ }}>
       <Box>
         <Box
           sx={{
@@ -67,14 +76,14 @@ const DashboardDefault = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            bgcolor: '#f2f5f8',
+            bgcolor: "#fff",
             borderRadius: 2
           }}
         >
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', }}>
             <Box
               sx={{
-                background: '#34699c',
+                background: '#0f172a',
                 color: '#fff',
                 borderRadius: '50%',
                 height: 40,
@@ -89,8 +98,10 @@ const DashboardDefault = () => {
               <UserOutlined />
             </Box>
             <Box>
-              <Typography sx={{ fontSize: 14, fontWeight: 600 }}>Platform Admin Dashboard</Typography>
-              <Typography sx={{ fontSize: 13 }}>Hello, Admin 👋</Typography>
+              <Typography sx={{ fontSize: 14, fontWeight: 600 }}>Platform Institute Dashboard</Typography>
+              <Typography sx={{ fontSize: 13 , fontWeight: 500 ,textTransform:"capitalize"}}>
+  Hello  {userData?.institutionName}
+</Typography>
             </Box>
           </Box>
         </Box>
@@ -106,6 +117,8 @@ const DashboardDefault = () => {
         />
       )}
     </MainCard>
+  
+</Box>
   );
 };
 

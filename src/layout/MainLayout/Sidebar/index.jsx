@@ -49,8 +49,8 @@ const Sidebar = ({ drawerOpen, drawerToggle }) => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'flex-end',
-                backgroundColor: '#ea580c',
-                color: '#0f172a',
+                backgroundColor: '#0f172a',
+                color: '#fff',
                 cursor: isDraftOrPending ? 'not-allowed' : 'pointer',
                 zIndex: 1300
               }}

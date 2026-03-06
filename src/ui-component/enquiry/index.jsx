@@ -22,7 +22,7 @@ export default function InstituteEnquiries() {
     <div
       style={{
         padding: "30px",
-        backgroundColor: "#f4f6f9",
+        backgroundColor: "rgb(230, 237, 248)",
         minHeight: "100vh"
       }}
     >
