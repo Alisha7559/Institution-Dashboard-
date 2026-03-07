@@ -16,7 +16,9 @@ import {
   Modal,
   Box,
   Button,
-  TablePagination
+  TablePagination,
+  Grid,
+  Typography
 } from "@mui/material";
 
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -33,7 +35,6 @@ export default function InstituteEnquiries() {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(null);
 
-  /* pagination */
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -83,7 +84,6 @@ export default function InstituteEnquiries() {
       </h1>
 
       <div
-      
         style={{
           background: "#fff",
           borderRadius: "10px",
@@ -94,7 +94,6 @@ export default function InstituteEnquiries() {
       >
 
         <Table>
-
           <TableHead>
             <TableRow>
               <TableCell><b>Student</b></TableCell>
@@ -107,7 +106,6 @@ export default function InstituteEnquiries() {
           </TableHead>
 
           <TableBody>
-
             {enquiries
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((item) => {
@@ -123,7 +121,9 @@ export default function InstituteEnquiries() {
 
               const courseName =
   item?.courseId?.courseName ||
+  item?.courseId?.name ||
   item?.courseName ||
+  item?.course ||
   "N/A";
 
               return (
@@ -154,7 +154,6 @@ export default function InstituteEnquiries() {
 
                   <TableCell>
 
-                    {/* 👁 VIEW */}
                     <IconButton
                       onClick={() => openModal(item)}
                       style={{ color: "#0f172a" }}
@@ -162,7 +161,6 @@ export default function InstituteEnquiries() {
                       <VisibilityIcon />
                     </IconButton>
 
-                    {/* DELETE */}
                     <IconButton
                       onClick={() => dispatch(deleteEnquiry(item._id))}
                       style={{ color: "#ea580c" }}
@@ -175,11 +173,8 @@ export default function InstituteEnquiries() {
                 </TableRow>
               );
             })}
-
           </TableBody>
         </Table>
-
-        {/* PAGINATION */}
 
         <TablePagination
           component="div"
@@ -197,7 +192,7 @@ export default function InstituteEnquiries() {
 
       <Modal open={open} onClose={closeModal}>
         <Box
-          style={{
+          sx={{
             position: "absolute",
             top: "50%",
             left: "50%",
@@ -205,24 +200,71 @@ export default function InstituteEnquiries() {
             background: "#fff",
             padding: "30px",
             borderRadius: "10px",
-            width: "450px"
+            width: "500px"
           }}
         >
 
           {selected && (
             <>
-              <h3 style={{ marginBottom: "20px" }}>Enquiry Details</h3>
+              <Typography variant="h3" mb={3}>
+                Enquiry Details
+              </Typography>
 
-              <p><b>Student:</b> {selected?.studentId?.studentname || selected?.name}</p>
-              <p><b>Email:</b> {selected?.studentId?.email || selected?.email}</p>
-              <p><b>Phone:</b> {selected?.studentId?.phone || selected?.phone}</p>
-              <p><b>Course:</b> {selected?.courseId?.courseName}</p>
-              <p><b>Qualification:</b> {selected?.qualification}</p>
-              <p><b>Description:</b> {selected?.description}</p>
-              <p><b>Status:</b> {selected?.status}</p>
+              <Grid container spacing={2}>
+
+                <Grid item xs={6}>
+                  <b>Student</b>
+                  <Typography>
+                    {selected?.studentId?.studentname || selected?.name}
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={6}>
+                  <b>Email</b>
+                  <Typography>
+                    {selected?.studentId?.email || selected?.email}
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={6}>
+                  <b>Phone</b>
+                  <Typography>
+                    {selected?.studentId?.phone || selected?.phone}
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={6}>
+                  <b>Course</b>
+                  <Typography>
+                    {selected?.courseId?.courseName}
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={6}>
+                  <b>Qualification</b>
+                  <Typography>
+                    {selected?.qualification}
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={6}>
+                  <b>Status</b>
+                  <Typography>
+                    {selected?.status}
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={12}>
+                  <b>Description</b>
+                  <Typography>
+                    {selected?.description}
+                  </Typography>
+                </Grid>
+
+              </Grid>
 
               {selected.status === "Pending" && (
-                <div style={{ marginTop: "20px" }}>
+                <div style={{ marginTop: "25px" }}>
 
                   <Button
                     variant="contained"
@@ -233,7 +275,7 @@ export default function InstituteEnquiries() {
                     onClick={() => {
                       dispatch(updateEnquiry({
                         id: selected._id,
-                      status: "Contacted"
+                        status: "Contacted"
                       }));
                       closeModal();
                     }}
@@ -247,12 +289,12 @@ export default function InstituteEnquiries() {
                     onClick={() => {
                       dispatch(updateEnquiry({
                         id: selected._id,
-                       status: "Resolved"
+                        status: "Resolved"
                       }));
                       closeModal();
                     }}
                   >
-                 Resolve
+                    Resolve
                   </Button>
 
                 </div>
@@ -264,6 +306,7 @@ export default function InstituteEnquiries() {
               >
                 Close
               </Button>
+
             </>
           )}
 

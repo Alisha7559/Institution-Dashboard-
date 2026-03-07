@@ -83,14 +83,14 @@ const RoleMenu = {
       icon: icons.IconStar,
       breadcrumbs: false
     },
-    {
-      id: 'notifications',
-      title: 'Notification',
-      type: 'item',
-      url: '/notification',
-      icon: icons.IconBell,
-      breadcrumbs: false
-    },
+    // {
+    //   id: 'notifications',
+    //   title: 'Notification',
+    //   type: 'item',
+    //   url: '/notification',
+    //   icon: icons.IconBell,
+    //   breadcrumbs: false
+    // },
    
     
      
