@@ -31,13 +31,18 @@ import {
   FormControl,
   InputLabel,
   Card,
-  CircularProgress
+  CircularProgress, Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions
 } from '@mui/material';
 
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from "@mui/icons-material/Visibility";
+
+
 const initialForm = {
   courseName: '',
   category: '',
@@ -66,6 +71,8 @@ const CoursesDashboard = () => {
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState(initialForm);
   const [filteredSubcategories, setFilteredSubcategories] = useState([]);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+const [courseToDelete, setCourseToDelete] = useState(null);
 
   useEffect(() => {
     dispatch(getCourses(userData));
@@ -117,6 +124,22 @@ const skillsArray = (() => {
     setViewOpen(true);
   };
   console.log("images", selectedCourse.images)
+
+  const handleDeleteClick = (id) => {
+  setCourseToDelete(id);
+  setDeleteOpen(true);
+};
+
+const confirmDelete = () => {
+  dispatch(deleteCourse(courseToDelete));
+  setDeleteOpen(false);
+  setCourseToDelete(null);
+};
+
+const cancelDelete = () => {
+  setDeleteOpen(false);
+  setCourseToDelete(null);
+};
 
   const openAddDrawer = () => {
     setEditMode(false);
@@ -293,8 +316,9 @@ form.append("modules", JSON.stringify(formData.modules));
                     <IconButton onClick={() => handleView(course)} color="primary">
                       <VisibilityIcon />
                     </IconButton>               
-                       <IconButton  sx={{ color: "#ea580c" }} onClick={() => dispatch(deleteCourse(course._id))}><DeleteIcon /></IconButton>
-                  </TableCell>
+<IconButton sx={{ color: "#ea580c" }} onClick={() => handleDeleteClick(course._id)}>
+  <DeleteIcon />
+</IconButton>                  </TableCell>
                 </TableRow>
               ))
             )}
@@ -649,6 +673,29 @@ form.append("modules", JSON.stringify(formData.modules));
           
         )}
       </Drawer>
+      <Dialog open={deleteOpen} onClose={cancelDelete}>
+  <DialogTitle>Delete Course</DialogTitle>
+
+  <DialogContent>
+    <Typography>
+      Do you want to delete this course?
+    </Typography>
+  </DialogContent>
+
+  <DialogActions>
+    <Button onClick={cancelDelete}>
+      Cancel
+    </Button>
+
+    <Button
+      onClick={confirmDelete}
+      variant="contained"
+      color="error"
+    >
+      Proceed
+    </Button>
+  </DialogActions>
+</Dialog>
     </Box>
 
   );

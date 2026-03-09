@@ -2,42 +2,43 @@
 import React from 'react';
 import { Grid, Paper, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { useState,useEffect } from 'react'
-import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
+import { useState, useEffect } from 'react'
 import {
   BookOutlined,
   TeamOutlined,
   QuestionCircleOutlined,
   AppstoreOutlined
 } from '@ant-design/icons';
+import { fontWeight } from '@mui/system';
 
 const AnalyticsCard = () => {
 
-  const courses = useSelector((state) => state.course?.courses || []);
-const [students, setStudents] = useState([]);
+const { courses = [] } = useSelector(state => state.course || {});
+  const totalSeats = courses.reduce(
+    (sum, course) => sum + (Number(course.totalSeats) || 0),
+    0
+  );
 
-useEffect(() => {
-  axios
-    .get("http://localhost:7000/api/institution-students", { withCredentials: true })
-    .then((res) => setStudents(res.data))
-    .catch((err) => console.log(err));
-}, []);  const enquiry = useSelector((state) => state.enquiry?.list || []);
-const seatmanagement = useSelector((state) => state.seatManagement?.seats || []);
+  const students = useSelector((state) => state.student?.students || []);
+const enquiry = useSelector((state) => state.enquiry?.count || 0);  
+  
+
 
   const cardStyle = {
     p: 3,
     borderRadius: 4,
-    background: "#0f172a",
-    borderLeft: "5px solid #ea580c",
+    background: "#ffff ",
+    borderLeft: "5px solid #0f172a",
     boxShadow: 3,
-    color: "#fff",
+    color: "#0f172a",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
     transition: "0.3s",
     "&:hover": {
-      transform: "translateY(-5px)"
+      transform: "translateY(-5px)",
+      fontWeight: "700px"
     }
   };
 
@@ -54,10 +55,11 @@ const seatmanagement = useSelector((state) => state.seatManagement?.seats || [])
         <Link to="/courses" style={{ textDecoration: 'none' }}>
           <Paper sx={cardStyle}>
             <div>
-              <Typography variant="h4" fontWeight={700} color={ "#fff"}>
+              <Typography variant="h4" fontWeight={700} color={"#0f172a"}>
                 {courses.length}
               </Typography>
               <Typography>Courses</Typography>
+
             </div>
             <BookOutlined style={iconStyle} />
           </Paper>
@@ -69,7 +71,7 @@ const seatmanagement = useSelector((state) => state.seatManagement?.seats || [])
         <Link to="/students" style={{ textDecoration: 'none' }}>
           <Paper sx={cardStyle}>
             <div>
-              <Typography variant="h4" fontWeight={700} color={ "#fff"}>
+              <Typography variant="h4" fontWeight={700} color={"#0f172a"}>
                 {students.length}
               </Typography>
               <Typography>Students</Typography>
@@ -84,8 +86,8 @@ const seatmanagement = useSelector((state) => state.seatManagement?.seats || [])
         <Link to="/enquiry" style={{ textDecoration: 'none' }}>
           <Paper sx={cardStyle}>
             <div>
-              <Typography variant="h4" fontWeight={700} color={ "#fff"}>
-                {enquiry.length}
+              <Typography variant="h4" fontWeight={700} color={"#0f172a"}>
+{enquiry}
               </Typography>
               <Typography>Enquiries</Typography>
             </div>
@@ -99,8 +101,8 @@ const seatmanagement = useSelector((state) => state.seatManagement?.seats || [])
         <Link to="/seat-management" style={{ textDecoration: 'none' }}>
           <Paper sx={cardStyle}>
             <div>
-              <Typography variant="h4" fontWeight={700} color={ "#fff"}>
-                {seatmanagement.length}
+              <Typography variant="h4" fontWeight={700} color={"#0f172a"}>
+                {totalSeats}
               </Typography>
               <Typography>Seat Management</Typography>
             </div>

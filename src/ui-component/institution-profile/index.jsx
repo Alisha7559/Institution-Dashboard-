@@ -38,13 +38,14 @@ const [openModal, setOpenModal] = useState(false);
   );
 
   return (
-    <Box p={4}>
+    <Box p={4}  backgroundColor= {"rgb(230, 237, 248)"}  >
       {/* Header */}
       <Box
         display="flex"
         justifyContent="space-between"
         alignItems="center"
         mb={3}
+        
       >
         <Typography variant="h3" sx={{ fontWeight: 600 }}>
           Institution Profile

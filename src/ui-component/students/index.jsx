@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-
+import { useDispatch, useSelector } from "react-redux";
+import { getStudents } from "../../container/studentcontainer/slice";
 
 import {
   Box,
@@ -26,9 +26,12 @@ import PersonIcon from "@mui/icons-material/Person";
 import EmailIcon from "@mui/icons-material/Email";
 
 export default function Students() {
+const dispatch = useDispatch();
 
-  const [students, setStudents] = useState([]);
-  const [loading, setLoading] = useState(true);
+const { students = [], loading = false } = useSelector(
+  (state) => state.student || {}
+);
+  
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
 const [anchorEl, setAnchorEl] = useState(null);
@@ -42,30 +45,10 @@ const handleClose = (value) => {
   if (value) setCourseTypeFilter(value);
   setAnchorEl(null);
 };
-  useEffect(() => {
+ useEffect(() => {
+  dispatch(getStudents());
+}, [dispatch]);
 
-    const fetchStudents = async () => {
-
-      try {
-
-        const res = await axios.get(
-          "http://localhost:7000/api/institution-students",
-          { withCredentials: true }
-        );
-
-        setStudents(res.data);
-
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-
-    };
-
-    fetchStudents();
-
-  }, []);
 
   const totalStudents = students.length;
   const degreeStudents = students.filter(
@@ -199,14 +182,14 @@ const [courseTypeFilter, setCourseTypeFilter] = useState("All");
       sx={{
          p: 3,
     borderRadius: 4,
-    background:"#0f172a",
+    background: "#7fbded ",
     borderLeft: "5px solid #ea580c",
     
     boxShadow: 3
       }}
     >
-      <Typography variant="h4"sx={{ color: "#ffff", fontWeight: 700 }}>{totalStudents}</Typography>
-      <Typography sx={{ color:"#ffff" }}>Total Students</Typography>
+      <Typography variant="h4"sx={{ color: "#0f172a", fontWeight: 700 }}>{totalStudents}</Typography>
+      <Typography sx={{ color:"#0f172a",fontWeight: 800 }}>Total Students</Typography>
     </Paper>
   </Grid>
 
@@ -215,13 +198,13 @@ const [courseTypeFilter, setCourseTypeFilter] = useState("All");
       sx={{
          p: 3,
     borderRadius: 4,
-   background:"#0f172a",
+    background: "#7fbded ",
     borderLeft: "5px solid #ea580c",
     boxShadow: 3
       }}
     >
-      <Typography variant="h4" sx={{ color: "#ffff", fontWeight: 700 }}>{degreeStudents}</Typography>
-      <Typography sx={{ color: "#ffff" }}>Degree Students</Typography>
+      <Typography variant="h4" sx={{ color: "#0f172a", fontWeight: 700 }}>{degreeStudents}</Typography>
+      <Typography sx={{ color: "#0f172a",fontWeight: 800 }}>Degree Students</Typography>
     </Paper>
   </Grid>
 
@@ -230,13 +213,13 @@ const [courseTypeFilter, setCourseTypeFilter] = useState("All");
       sx={{
          p: 3,
     borderRadius: 4,
-  background:"#0f172a",
+    background: "#7fbded ",
     borderLeft: "5px solid #ea580c",
     boxShadow: 3
       }}
     >
-      <Typography variant="h4"sx={{ color: "#ffff", fontWeight: 700 }}>{diplomaStudents}</Typography>
-      <Typography sx={{ color: "#ffff" }}>Diploma Students</Typography>
+      <Typography variant="h4"sx={{ color: "#0f172a", fontWeight: 700 }}>{diplomaStudents}</Typography>
+      <Typography sx={{ color: "#0f172a",fontWeight: 800 }}>Diploma Students</Typography>
     </Paper>
   </Grid>
 

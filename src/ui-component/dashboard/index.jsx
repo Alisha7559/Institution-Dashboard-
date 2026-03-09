@@ -10,7 +10,9 @@ import ProfileModal from "./ProfileModal";
 // import { getUserCount, getUsers } from 'container/UsersContainer/slice';
 // import { dashCount } from 'container/DashboardContainer/slice';
 import MainCard from 'ui-component/cards/MainCard';
-
+import { getCourses } from "container/coursecontainer/slice";
+import { getInstituteEnquiry } from "container/enquirycontainer/slice";
+import { getStudents } from "container/studentcontainer/slice";
 
 const DashboardDefault = () => {
   const dispatch = useDispatch();
@@ -27,7 +29,10 @@ const DashboardDefault = () => {
   }, [userData]);
 
   // ✅ Dashboard data effect (SEPARATE)
-  useEffect(() => {
+ useEffect(() => {
+  dispatch(getCourses(userData));
+  dispatch(getInstituteEnquiry(userData));
+  dispatch(getStudents());
     const urls = {
       facilities: `facilities?filter={"limit":${limit},"skip":${page},"order":["createdOn DESC"]}`,
       users: `users?filter={"limit":${limit},"skip":${page},"order":["createdOn DESC"]}`,
@@ -55,8 +60,7 @@ const DashboardDefault = () => {
     // dispatch(getIssueReports(urls.issues));
     // dispatch(getUsers(urls.users));
     // dispatch(dashCount());
-  }, [dispatch, limit, page]);
-
+}, [dispatch, limit, page, userData]);
   return (
     <Box
   sx={{
@@ -98,7 +102,7 @@ const DashboardDefault = () => {
               <UserOutlined />
             </Box>
             <Box>
-              <Typography sx={{ fontSize: 14, fontWeight: 600 }}>Platform Institute Dashboard</Typography>
+              <Typography sx={{ fontSize: 14, fontWeight: 600 }}> Institute Dashboard</Typography>
               <Typography sx={{ fontSize: 13 , fontWeight: 500 ,textTransform:"capitalize"}}>
   Hello  {userData?.institutionName}
 </Typography>
