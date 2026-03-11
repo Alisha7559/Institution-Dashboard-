@@ -6,7 +6,7 @@ import ratingReducer from "container/RatingContainer/slice";
 import coursReducer from "container/coursecontainer/slice";
 import orderReducer from "container/ordercontainer/slice";
 import enquiryReducer from 'container/enquirycontainer/slice';
-
+import supportReducer from "container/supportcontainer/slice";
 const reducer = combineReducers({
 
  login: loginReducer,
@@ -14,7 +14,8 @@ const reducer = combineReducers({
  rating: ratingReducer,
  course: coursReducer,
  order: orderReducer,
- enquiry: enquiryReducer
+ enquiry: enquiryReducer,
+ support: supportReducer 
 
 
 });

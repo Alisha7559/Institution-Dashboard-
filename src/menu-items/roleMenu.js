@@ -7,9 +7,10 @@ import {
   IconBell,
   IconFileAnalytics,
   IconShoppingCart,
-  IconMessageDots
+  IconMessageDots,
+  IconHeadset   // ✅ add
 } from '@tabler/icons-react';
-// constant
+
 const icons = {
   IconLayoutDashboard,
   IconBook,
@@ -19,8 +20,10 @@ const icons = {
   IconBell,
   IconFileAnalytics,
   IconShoppingCart,
-  IconMessageDots
+  IconMessageDots,
+  IconHeadset   // ✅ add
 };
+
 const RoleMenu = {
   id: 'dashboard',
   title: '',
@@ -50,7 +53,7 @@ const RoleMenu = {
       icon: icons.IconUsers,
       breadcrumbs: false
     },
-     {
+    {
       id: 'enquiry',
       title: 'Enquiry',
       type: 'item',
@@ -66,15 +69,6 @@ const RoleMenu = {
       icon: icons.IconArmchair,
       breadcrumbs: false
     },
-//     {
-//   id: 'order',
-//   title: 'Orders',
-//   type: 'item',
-//   url: '/order',
-//   icon: icons.IconShoppingCart,
-//   breadcrumbs: false
-// },
-
     {
       id: 'rating',
       title: 'Ratings & Feedback',
@@ -83,21 +77,17 @@ const RoleMenu = {
       icon: icons.IconStar,
       breadcrumbs: false
     },
-    // {
-    //   id: 'notifications',
-    //   title: 'Notification',
-    //   type: 'item',
-    //   url: '/notification',
-    //   icon: icons.IconBell,
-    //   breadcrumbs: false
-    // },
-   
-    
-     
 
+    /* ✅ SUPPORT MENU */
 
-
-
+    {
+      id: 'support',
+      title: 'Support',
+      type: 'item',
+      url: '/support',
+      icon: icons.IconHeadset,
+      breadcrumbs: false
+    }
   ]
 };
 

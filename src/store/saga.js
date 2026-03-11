@@ -5,6 +5,7 @@ import ratingActionWatcher from "container/RatingContainer/saga";
 import coursWatcher from "container/coursecontainer/saga";
 import OrderWatcher from "container/ordercontainer/saga";
 import enquiryWatcher from 'container/enquirycontainer/saga';
+import supportWatcher from "container/supportcontainer/saga";
 
 
 
@@ -16,7 +17,8 @@ function* rootSaga() {
   call(ratingActionWatcher),
   call(coursWatcher),
   call(OrderWatcher),
-     call(enquiryWatcher)
+     call(enquiryWatcher),
+       call(supportWatcher)
 
  ]);
 
