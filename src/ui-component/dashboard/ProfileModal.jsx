@@ -176,7 +176,7 @@ const ProfileModal = ({ user = {}, mode = "create", onClose }) => {
               backgroundColor: "#fafafa"
             }}
           >
-            <Typography variant="h5" fontWeight={600} sx={{ color: "#0f172a" }}>
+            <Typography variant="h3" fontWeight={600} sx={{ color: "#0f172a" }}>
               {mode === "edit" ? "Edit Institution Profile" : "Complete Institution Profile"}
             </Typography>
             <IconButton onClick={onClose}>
@@ -321,7 +321,7 @@ const ProfileModal = ({ user = {}, mode = "create", onClose }) => {
           <Box sx={{ p: 3, borderTop: "1px solid #eee", display: "flex", gap: 2, backgroundColor: "#fafafa" }}>
             <Button variant="outlined" fullWidth onClick={onClose}>Cancel</Button>
             <Button variant="contained" fullWidth disabled={!isValid} onClick={handleSave} sx={{ bgcolor: "#0f172a", "&:hover": { bgcolor: "#0f172a" } }}>
-              {mode === "edit" ? "Save Changes" : "Submit for Verification"}
+              {mode === "edit" ? "Save Changes" : "Profile Updated"}
             </Button>
           </Box>
         </Paper>

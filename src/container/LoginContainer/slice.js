@@ -39,28 +39,35 @@ const loginSlice = createSlice({
             state.loading = false;
         },
         updateProfile: (state) => {
-  state.loading = true;
-},
-updateProfileSuccess: (state, action) => {
-  state.loading = false;
-  state.userData = action.payload;
-},
-updateProfileFail: (state) => {
-  state.loading = false;
-}
+            state.loading = true;
+        },
+        updateProfileSuccess: (state, action) => {
+            state.loading = false;
+            state.userData = action.payload;
+        },
+        updateProfileFail: (state) => {
+            state.loading = false;
+        },
+        logout: (state) => {
+            state.data = null;
+            state.userData = null;
+            state.profileIncomplete = false;
+            state.error = null;
+        }
     }
 });
 
 export const {
-  userLogin,
-  loginSuccess,
-  loginFail,
-  userMe,
-  userMeSuccess,
-  userMeFail,
-  updateProfile,
-  updateProfileSuccess,
-  updateProfileFail
+    userLogin,
+    loginSuccess,
+    loginFail,
+    userMe,
+    userMeSuccess,
+    userMeFail,
+    updateProfile,
+    updateProfileSuccess,
+    updateProfileFail,
+    logout
 } = loginSlice.actions;
 export const selectError = (state) => state.login.error;
 

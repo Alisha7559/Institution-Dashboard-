@@ -20,16 +20,16 @@ const { courses = [] } = useSelector(state => state.course || {});
     0
   );
 
-  const students = useSelector((state) => state.student?.students || []);
-const enquiry = useSelector((state) => state.enquiry?.count || 0);  
-  
+const students = useSelector(state => state.student?.students || []);
+const enquiry = useSelector(state => state.enquiry?.count || 0);
 
 
   const cardStyle = {
     p: 3,
     borderRadius: 4,
+    height:"15vh",
     background: "#ffff ",
-    borderLeft: "5px solid #0f172a",
+    borderLeft: "5px solid #ea580c",
     boxShadow: 3,
     color: "#0f172a",
     display: "flex",
@@ -43,7 +43,7 @@ const enquiry = useSelector((state) => state.enquiry?.count || 0);
   };
 
   const iconStyle = {
-    fontSize: 30,
+    fontSize: 40,
     color: "#ea580c"
   };
 

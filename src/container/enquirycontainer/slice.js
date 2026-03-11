@@ -25,21 +25,21 @@ const enquirySlice = createSlice({
     },
 
     getEnquirySuccess: (state, action) => {
-  state.loading = false;
+      state.loading = false;
 
-  if (Array.isArray(action.payload)) {
-    state.list = action.payload;
-    state.count = action.payload.length;
-  } 
-  else if (Array.isArray(action.payload?.data)) {
-    state.list = action.payload.data;
-    state.count = action.payload.count || action.payload.data.length;
-  } 
-  else {
-    state.list = [];
-    state.count = 0;
-  }
-},
+      if (Array.isArray(action.payload)) {
+        state.list = action.payload;
+        state.count = action.payload.length;
+      } 
+      else if (Array.isArray(action.payload?.data)) {
+        state.list = action.payload.data;
+        state.count = action.payload.count || action.payload.data.length;
+      } 
+      else {
+        state.list = [];
+        state.count = 0;
+      }
+    },
 
     getEnquiryFailure: (state, action) => {
       state.loading = false;
@@ -70,6 +70,30 @@ const enquirySlice = createSlice({
     updateEnquiryFailure: (state, action) => {
       state.loading = false;
       state.error = action.payload;
+    },
+
+    /* ================= DELETE ENQUIRY ================= */
+
+    deleteEnquiry: (state) => {
+      state.loading = true;
+      state.error = null;
+    },
+
+    deleteEnquirySuccess: (state, action) => {
+      state.loading = false;
+
+      const id = action.payload;
+
+      state.list = state.list.filter(
+        (item) => item._id !== id
+      );
+
+      state.count = state.list.length;
+    },
+
+    deleteEnquiryFailure: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
     }
 
   }
@@ -82,7 +106,12 @@ export const {
   getEnquiryFailure,
   updateEnquiry,
   updateEnquirySuccess,
-  updateEnquiryFailure
+  updateEnquiryFailure,
+
+  deleteEnquiry,
+  deleteEnquirySuccess,
+  deleteEnquiryFailure
+
 } = enquirySlice.actions;
 
 export default enquirySlice.reducer;

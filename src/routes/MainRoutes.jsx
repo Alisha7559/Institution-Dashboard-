@@ -33,7 +33,7 @@ const MainRoutes = {
     
     {
   path: '',
-  element: <Navigate to="/login" replace />
+  element: <Navigate to="/dashboard" replace />
 },
    
 

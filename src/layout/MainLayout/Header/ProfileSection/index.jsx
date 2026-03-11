@@ -21,7 +21,7 @@ import { IconSettings, IconLogout } from '@tabler/icons-react';
 import doorCloseAnimation from 'assets/Gif/Door-Animation.json';
 // import ResetPasswordProfile from 'ui-component/common/userProfile/resetpassword';
 // import { setProfileFlag } from 'module/arbitrator/container/arbitratorProfile/slice';
-
+import {logout} from '../../../../container/LoginContainer/slice'
 const ResponsiveIcons = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
@@ -40,10 +40,10 @@ const ResponsiveIcons = () => {
   const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
 
   const handleLogoutConfirm = () => {
-    localStorage.removeItem('Token');
-    setLogoutOpen(false);
-    navigate('/login');
-  };
+  dispatch(logout());  
+  setLogoutOpen(false);
+  navigate('/login');
+};
 
   const profilescreenOpen = () => {
     // dispatch(setProfileFlag({ flag: true }));
@@ -114,7 +114,7 @@ const ResponsiveIcons = () => {
         }}
         sx={{
           color: 'white',
-          backgroundColor: '#00182e', 
+          backgroundColor: '#0f172a', 
           '&:hover': {
             backgroundColor: '#ea580c' 
           },
@@ -175,9 +175,9 @@ const ResponsiveIcons = () => {
             sx={{
               textTransform: 'none',
               borderRadius: 2,
-              backgroundColor: '#00182e',
+              backgroundColor: '#0f172a',
               '&:hover': {
-                backgroundColor: '#da7808'
+                backgroundColor: '#ea580c'
               }
             }}
           >

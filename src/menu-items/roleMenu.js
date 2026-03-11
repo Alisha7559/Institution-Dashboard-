@@ -66,14 +66,14 @@ const RoleMenu = {
       icon: icons.IconArmchair,
       breadcrumbs: false
     },
-    {
-  id: 'order',
-  title: 'Orders',
-  type: 'item',
-  url: '/order',
-  icon: icons.IconShoppingCart,
-  breadcrumbs: false
-},
+//     {
+//   id: 'order',
+//   title: 'Orders',
+//   type: 'item',
+//   url: '/order',
+//   icon: icons.IconShoppingCart,
+//   breadcrumbs: false
+// },
 
     {
       id: 'rating',
@@ -83,14 +83,14 @@ const RoleMenu = {
       icon: icons.IconStar,
       breadcrumbs: false
     },
-    {
-      id: 'notifications',
-      title: 'Notification',
-      type: 'item',
-      url: '/notification',
-      icon: icons.IconBell,
-      breadcrumbs: false
-    },
+    // {
+    //   id: 'notifications',
+    //   title: 'Notification',
+    //   type: 'item',
+    //   url: '/notification',
+    //   icon: icons.IconBell,
+    //   breadcrumbs: false
+    // },
    
     
      

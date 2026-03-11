@@ -112,6 +112,7 @@ const DashboardDefault = () => {
 
         {/* Main Analytics Section */}
         <AnalyticsCard />
+        
       </Box>
       {/* 👇 ADD MODAL AT BOTTOM */}
       {showModal && (

@@ -5,7 +5,7 @@ export default function TableHead({ keys, config, hasAction }) {
   return (
     <MuiTableHead>
       <TableRow>
-        <TableCell>#</TableCell>
+        <TableCell>Sl.No</TableCell>
 
         {keys.map((key) => (
           <TableCell key={key}>

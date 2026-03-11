@@ -1,7 +1,31 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getInstituteEnquiry, updateEnquiry } from "../../container/enquirycontainer/slice";
-import {Typography} from "@mui/material";
+import {
+  getInstituteEnquiry,
+  updateEnquiry,
+  deleteEnquiry
+} from "../../container/enquirycontainer/slice";
+
+import {
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  IconButton,
+  Modal,
+  Box,
+  Button,
+  TablePagination,
+  Grid,
+  Typography,
+  Dialog,
+  
+} from "@mui/material";
+
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import DeleteIcon from "@mui/icons-material/Delete";
+
 export default function InstituteEnquiries() {
 
   const dispatch = useDispatch();
@@ -10,13 +34,48 @@ export default function InstituteEnquiries() {
   const loading = useSelector(state => state.enquiry?.loading);
   const error = useSelector(state => state.enquiry?.error);
 
+  const [open, setOpen] = useState(false);
+  const [selected, setSelected] = useState(null);
+ const [deleteOpen, setDeleteOpen] = useState(false);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+
+
+   const confirmDelete = () => {
+      dispatch(deleteCourse(courseToDelete));
+      setDeleteOpen(false);
+      setCourseToDelete(null);
+    };
+    
+ const cancelDelete = () => {
+    setDeleteOpen(false);
+    setCourseToDelete(null);
+  };
   useEffect(() => {
     dispatch(getInstituteEnquiry());
   }, [dispatch]);
 
+  const openModal = (item) => {
+    setSelected(item);
+    setOpen(true);
+  };
+
+  const closeModal = () => {
+    setOpen(false);
+    setSelected(null);
+  };
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   if (loading) return <p style={{ padding: "20px" }}>Loading enquiries...</p>;
   if (error) return <p style={{ color: "red", padding: "20px" }}>{error}</p>;
-  if (!enquiries.length) return <p style={{ padding: "20px" }}>No enquiries found.</p>;
 
   return (
     <div
@@ -26,108 +85,313 @@ export default function InstituteEnquiries() {
         minHeight: "100vh"
       }}
     >
-            <Typography variant="h2" fontWeight="bold" mb={3}
 
+      <h1
         style={{
           marginBottom: "25px",
-          color: "#0b2a4a",
+          color: "#0f172a",
           fontWeight: "600"
         }}
       >
         Institute Enquiries
-      </Typography>
+      </h1>
 
-      {enquiries.map((item) => (
-        <div
-          key={item._id}
-          style={{
-            backgroundColor: "#ffffff",
-            borderRadius: "12px",
-            padding: "20px",
-            marginBottom: "20px",
-            boxShadow: "0 4px 10px rgba(0,0,0,0.08)",
-            borderLeft: "6px solid #fd7e14"
+      <div
+        style={{
+          background: "#fff",
+          borderRadius: "10px",
+          padding: "20px",
+          boxShadow: "0 4px 10px rgba(0,0,0,0.08)",
+          borderLeft: "6px solid #ea580c"
+        }}
+      >
+
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell><b>Student</b></TableCell>
+              <TableCell><b>Email</b></TableCell>
+              <TableCell><b>Phone</b></TableCell>
+              <TableCell><b>Course</b></TableCell>
+              <TableCell><b>Status</b></TableCell>
+              <TableCell><b>Actions</b></TableCell>
+            </TableRow>
+          </TableHead>
+
+          <TableBody>
+            {enquiries
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((item) => {
+
+              const studentName =
+                item?.studentId?.studentname || item?.name || "N/A";
+
+              const studentEmail =
+                item?.studentId?.email || item?.email || "N/A";
+
+              const studentPhone =
+                item?.studentId?.phone || item?.phone || "N/A";
+
+              const courseName =
+  item?.courseId?.courseName ||
+  item?.courseId?.name ||
+  item?.courseName ||
+  item?.course ||
+  "N/A";
+
+              return (
+                <TableRow key={item._id}>
+
+                  <TableCell>{studentName}</TableCell>
+                  <TableCell>{studentEmail}</TableCell>
+                  <TableCell>{studentPhone}</TableCell>
+                  <TableCell>{courseName}</TableCell>
+
+                  <TableCell>
+                    <span
+                      style={{
+                        padding: "5px 12px",
+                        borderRadius: "20px",
+                        fontSize: "12px",
+                        backgroundColor:
+                          item.status === "Approved"
+                            ? "#d4edda"
+                            : item.status === "Rejected"
+                            ? "#f8d7da"
+                            : "#fff3cd"
+                      }}
+                    >
+                      {item.status}
+                    </span>
+                  </TableCell>
+
+                  <TableCell>
+
+                    <IconButton
+                      onClick={() => openModal(item)}
+                      style={{ color: "#0f172a" }}
+                    >
+                      <VisibilityIcon />
+                    </IconButton>
+
+                    <IconButton
+                      onClick={() => dispatch(deleteEnquiry(item._id))}
+                      style={{ color: "#ea580c" }}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+
+                  </TableCell>
+
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+
+        <TablePagination
+          component="div"
+          count={enquiries.length}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={rowsPerPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          rowsPerPageOptions={[5, 10, 25]}
+        />
+
+      </div>
+
+      {/* ================= VIEW MODAL ================= */}
+
+      <Modal open={open} onClose={closeModal}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%,-50%)",
+            background: "#fff",
+            padding: "30px",
+            borderRadius: "10px",
+            width: "500px"
           }}
         >
-          <p><b style={{ color: "#0b2a4a" }}>Student Name:</b> {item?.studentId?.studentname || "N/A"}</p>
-          <p><b style={{ color: "#0b2a4a" }}>Email:</b> {item?.studentId?.email || "N/A"}</p>
-          <p><b style={{ color: "#0b2a4a" }}>Phone:</b> {item?.studentId?.phone || "N/A"}</p>
-          <p><b style={{ color: "#0b2a4a" }}>Qualification:</b> {item?.qualification || "N/A"}</p>
-          <p><b style={{ color: "#0b2a4a" }}>Course:</b> {item?.courseId?.courseName || "N/A"}</p>
-          <p><b style={{ color: "#0b2a4a" }}>Description:</b> {item?.description || "N/A"}</p>
 
-          <p>
-            <b style={{ color: "#0b2a4a" }}>Status:</b>{" "}
-            <span
-              style={{
-                padding: "5px 12px",
-                borderRadius: "20px",
-                fontSize: "13px",
-                fontWeight: "500",
-                backgroundColor:
-                  item.status === "Approved"
-                    ? "#d4edda"
-                    : item.status === "Rejected"
-                    ? "#f8d7da"
-                    : "#fff3cd",
-                color:
-                  item.status === "Approved"
-                    ? "#040d37"
-                    : item.status === "Rejected"
-                    ? "#721c24"
-                    : "#ea580c"
+          {selected && (
+            <>
+              <Typography variant="h3" mb={3}>
+                Enquiry Details
+              </Typography>
+
+              <Grid container spacing={2}>
+
+                <Grid item xs={6}>
+                  <b>Student</b>
+                  <Typography>
+                    {selected?.studentId?.studentname || selected?.name}
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={6}>
+                  <b>Email</b>
+                  <Typography>
+                    {selected?.studentId?.email || selected?.email}
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={6}>
+                  <b>Phone</b>
+                  <Typography>
+                    {selected?.studentId?.phone || selected?.phone}
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={6}>
+                  <b>Course</b>
+                  <Typography>
+                    {selected?.courseId?.courseName}
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={6}>
+                  <b>Qualification</b>
+                  <Typography>
+                    {selected?.qualification}
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={6}>
+                  <b>Status</b>
+                  <Typography>
+                    {selected?.status}
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={12}>
+                  <b>Description</b>
+                  <Typography>
+                    {selected?.description}
+                  </Typography>
+                </Grid>
+
+              </Grid>
+
+              {selected.status === "Pending" && (
+                <div style={{ marginTop: "25px" }}>
+
+                  <Button
+                    variant="contained"
+                    style={{
+                      marginRight: "10px",
+                      background: "#040336"
+                    }}
+                    onClick={() => {
+                      dispatch(updateEnquiry({
+                        id: selected._id,
+                        status: "Contacted"
+                      }));
+                      closeModal();
+                    }}
+                  >
+                    Contact
+                  </Button>
+
+                  <Button
+                    variant="contained"
+                    style={{ background: "#ea580c" }}
+                    onClick={() => {
+                      dispatch(updateEnquiry({
+                        id: selected._id,
+                        status: "Resolved"
+                      }));
+                      closeModal();
+                    }}
+                  >
+                    Resolve
+                  </Button>
+
+                </div>
+              )}
+
+              <Button
+                onClick={closeModal}
+                style={{ marginTop: "20px" }}
+              >
+                Close
+              </Button>
+
+            </>
+          )}
+
+        </Box>
+      </Modal>
+      <Dialog
+              open={deleteOpen}
+              onClose={cancelDelete}
+              PaperProps={{
+                sx: {
+                  borderRadius: 3,
+                  p: 3,
+                  minWidth: 360,
+                  backgroundColor: "#f9fafc",
+                  boxShadow: 3
+                }
               }}
             >
-              {item?.status}
-            </span>
-          </p>
+              <Box textAlign="center">
+                {/* Warning Icon */}
+                <Box
+                  sx={{
+                    backgroundColor: "#0f172a",
+                    borderRadius: "50%",
+                    width: 60,
+                    height: 60,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    mx: "auto",
+                    mb: 2
+                  }}
+                >
+                  <Typography variant="h1" color="#ea580c">!</Typography>
+                </Box>
+      
+                {/* Title */}
+                <Typography variant="h4" fontWeight="bold" mb={1}>
+                  Delete Enquiry
+                </Typography>
+      
+                {/* Description */}
+                <Typography color="text.primary" variant="body2" mb={3}>
+                  Are you sure you want to delete?
+                  
+                </Typography>
+      
+                {/* Actions */}
+                <Box display="flex" justifyContent="center" gap={2}>
+                  <Button
+                    onClick={cancelDelete}
+                    variant="outlined"
+                    sx={{ borderRadius: 2, px: 3, color: "#0f172a", borderColor: "#0f172a" }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={confirmDelete}
+                    variant="contained"
+                    sx={{
+                      borderRadius: 2,
+                      px: 3,
+                      backgroundColor: "#ea580c",
+                      "&:hover": { backgroundColor: "#cc4700" }
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </Box>
+              </Box>
+            </Dialog>
 
-          {item.status === "Pending" && (
-            <div style={{ marginTop: "15px" }}>
-              <button
-                onClick={() =>
-                  dispatch(updateEnquiry({
-                    id: item._id,
-                    status: "Approved"
-                  }))
-                }
-                style={{
-                  padding: "8px 18px",
-                  marginRight: "10px",
-                  borderRadius: "6px",
-                  border: "none",
-                  cursor: "pointer",
-                  backgroundColor: "#040336",
-                  color: "#fff",
-                  fontWeight: "500"
-                }}
-              >
-                Approve
-              </button>
-
-              <button
-                onClick={() =>
-                  dispatch(updateEnquiry({
-                    id: item._id,
-                    status: "Rejected"
-                  }))
-                }
-                style={{
-                  padding: "8px 18px",
-                  borderRadius: "6px",
-                  border: "none",
-                  cursor: "pointer",
-                  backgroundColor: "#ea580c",
-                  color: "#fff",
-                  fontWeight: "500"
-                }}
-              >
-                Reject
-              </button>
-            </div>
-          )}
-        </div>
-      ))}
     </div>
   );
 }

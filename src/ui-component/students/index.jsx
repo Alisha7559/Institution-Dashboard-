@@ -6,72 +6,109 @@ import {
   Box,
   Typography,
   Grid,
-  Card,
-  CardContent,
-  Avatar,
-  Chip,
+  Paper,
   Stack,
   CircularProgress,
-  TextField,
-  Paper,
-  MenuItem
+  Button,
+  Menu,
+  MenuItem,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Chip,
+  TablePagination,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent
 } from "@mui/material";
-import { Button, Menu } from "@mui/material";
-import FilterListIcon from "@mui/icons-material/FilterList";
 
+import FilterListIcon from "@mui/icons-material/FilterList";
 import SearchIcon from "@mui/icons-material/Search";
-import SchoolIcon from "@mui/icons-material/School";
-import PaymentIcon from "@mui/icons-material/Payment";
-import PersonIcon from "@mui/icons-material/Person";
-import EmailIcon from "@mui/icons-material/Email";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import EditIcon from "@mui/icons-material/Edit";
 
 export default function Students() {
-const dispatch = useDispatch();
 
-const { students = [], loading = false } = useSelector(
-  (state) => state.student || {}
-);
-  
+  const dispatch = useDispatch();
+
+  const { students = [], loading = false } = useSelector(
+    (state) => state.student || {}
+  );
+
   const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState("All");
-const [anchorEl, setAnchorEl] = useState(null);
-const open = Boolean(anchorEl);
+  const [courseTypeFilter, setCourseTypeFilter] = useState("All");
 
-const handleClick = (event) => {
-  setAnchorEl(event.currentTarget);
-};
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [menuWidth, setMenuWidth] = useState(null);
+  const open = Boolean(anchorEl);
 
-const handleClose = (value) => {
-  if (value) setCourseTypeFilter(value);
-  setAnchorEl(null);
-};
- useEffect(() => {
-  dispatch(getStudents());
-}, [dispatch]);
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [viewOpen, setViewOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
 
+  // pagination
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(8);
 
+  useEffect(() => {
+    dispatch(getStudents());
+  }, [dispatch]);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+    setMenuWidth(event.currentTarget.offsetWidth);
+  };
+  const handleClose = (value) => {
+    if (value) setCourseTypeFilter(value);
+    setAnchorEl(null);
+  };
+
+  const handleView = (student) => {
+    setSelectedStudent(student);
+    setViewOpen(true);
+  };
+
+  const handleEdit = (student) => {
+    setSelectedStudent(student);
+    setEditOpen(true);
+  };
+
+  // statistics
   const totalStudents = students.length;
-  const degreeStudents = students.filter(
-  (s) => s.courseId?.subcategory?.name === "Degree"
+
+ const degreeStudents = students.filter(
+  (s) => s.courseId?.subcategory?.name?.toLowerCase() === "degree"
 ).length;
 
 const diplomaStudents = students.filter(
-  (s) => s.courseId?.subcategory?.name === "Diploma"
+  (s) => s.courseId?.subcategory?.name?.toLowerCase() === "diploma"
 ).length;
-const [courseTypeFilter, setCourseTypeFilter] = useState("All");
-  const filteredStudents = students
-  .filter((s) =>
-    s.studentId?.studentname?.toLowerCase().includes(search.toLowerCase())
-  )
-  .filter((s) => {
-    if (courseTypeFilter === "Degree")
-      return s.courseId?.subcategory?.name === "Degree";
 
-    if (courseTypeFilter === "Diploma")
-      return s.courseId?.subcategory?.name === "Diploma";
+  // latest first + search + filter
+  const filteredStudents = [...students]
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .filter((s) =>
+      (s.studentId?.studentname || "")
+        .toLowerCase()
+        .includes(search.toLowerCase())
+    )
+    .filter((s) => {
+  const type = s.courseId?.subcategory?.name?.toLowerCase();
 
-    return true;
-  });
+  if (courseTypeFilter === "Degree") {
+    return type === "degree";
+  }
+
+  if (courseTypeFilter === "Diploma") {
+    return type === "diploma";
+  }
+
+  return true;
+});
 
   if (loading) {
     return (
@@ -80,75 +117,63 @@ const [courseTypeFilter, setCourseTypeFilter] = useState("All");
       </Box>
     );
   }
- 
-  return (
 
-    <Box sx={{ p: 4,  backgroundColor: "rgb(230, 237, 248)", minHeight: "100vh" }}>
+  return (
+    <Box sx={{ p: 4, backgroundColor: "#e6edf8", minHeight: "100vh" }}>
 
       {/* HEADER */}
-      <Stack
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
-        mb={4}
-      >
 
-        <Typography variant="h2" fontWeight="bold">
-          Registered Students
-        </Typography>
+      <Typography variant="h4" fontWeight="bold" mb={4}>
+        Registered Students
+      </Typography>
 
-        {/* CUSTOM SEARCH */}
-        
+      {/* SEARCH + FILTER */}
 
-      </Stack>
-       {/* FILTER */}
-     <Stack direction="row" mb={3} spacing={2}>
+      <Stack direction="row" spacing={2} mb={3}>
 
-  <Button
-    variant="contained"
-    startIcon={<FilterListIcon />}
-    onClick={handleClick}
-    sx={{
-      color:'#0f172a',
-      background: "#fff",
-      borderRadius: "30px",
-      textTransform: "none",
-      px: 3,
-      "&:hover": {
-      background: "#fff",   // keeps same color on hover
-      boxShadow: "none"     // optional: removes hover shadow
-    }
-    }}
-  >
-    {courseTypeFilter === "All" ? "All Courses" : courseTypeFilter}
-  </Button>
+        <Button
+          variant="contained"
+          startIcon={<FilterListIcon />}
+          onClick={handleClick}
+          sx={{
+            background: "#fff",
+            color: "#0f172a",
+            borderRadius: "30px",
+            textTransform: "none",
+            px: 3,
+            boxShadow: 2,
+            "&:hover": {
+              background: "#fff", // prevents hover color change
+              boxShadow: 2
+            }
+          }}
+        >
+          {courseTypeFilter === "All" ? "All Courses" : courseTypeFilter}
+        </Button>
 
-  <Menu
-  anchorEl={anchorEl}
-  open={Boolean(anchorEl)}
-  onClose={() => handleClose()}
-  PaperProps={{
-    sx: {
-      width: anchorEl?.clientWidth,
-      mt: 1,
-      borderRadius: 2,
-      boxShadow: "0 6px 18px rgba(0,0,0,0.1)"
-    }
-  }}
->
-    <MenuItem onClick={() => handleClose("All")}>All Courses</MenuItem>
-    <MenuItem onClick={() => handleClose("Degree")}>Degree</MenuItem>
-    <MenuItem onClick={() => handleClose("Diploma")}>Diploma</MenuItem>
-  </Menu>
+        <Menu
+          anchorEl={anchorEl}
+          open={open}
+          onClose={() => handleClose()}
+          PaperProps={{
+            sx: {
+              width: menuWidth,
+              borderRadius: "12px"
+            }
+          }}
+        >
+          <MenuItem onClick={() => handleClose("All")}>All</MenuItem>
+          <MenuItem onClick={() => handleClose("Degree")}>Degree</MenuItem>
+          <MenuItem onClick={() => handleClose("Diploma")}>Diploma</MenuItem>
+        </Menu>
 
-  <Box
+        <Box
           sx={{
             display: "flex",
             alignItems: "center",
             background: "#fff",
             borderRadius: "30px",
             px: 2,
-            py: 0.5,
             boxShadow: 2,
             width: 280
           }}
@@ -164,158 +189,270 @@ const [courseTypeFilter, setCourseTypeFilter] = useState("All");
               border: "none",
               outline: "none",
               width: "100%",
-              fontSize: "14px",
               background: "transparent"
             }}
           />
 
         </Box>
 
-</Stack>
+      </Stack>
 
+      {/* STATISTICS */}
 
-     {/* STAT CARDS */}
-<Grid container spacing={3} mb={4}>
+      <Grid container spacing={3} mb={4}>
 
-  <Grid item xs={12} md={4}>
-    <Paper
-      sx={{
-         p: 3,
-    borderRadius: 4,
-    background: "#7fbded ",
-    borderLeft: "5px solid #ea580c",
-    
-    boxShadow: 3
-      }}
-    >
-      <Typography variant="h4"sx={{ color: "#0f172a", fontWeight: 700 }}>{totalStudents}</Typography>
-      <Typography sx={{ color:"#0f172a",fontWeight: 800 }}>Total Students</Typography>
-    </Paper>
-  </Grid>
+        {[
+          { label: "Total Students", value: totalStudents },
+          { label: "Degree Students", value: degreeStudents },
+          { label: "Diploma Students", value: diplomaStudents }
+        ].map((item, i) => (
 
-  <Grid item xs={12} md={4}>
-    <Paper
-      sx={{
-         p: 3,
-    borderRadius: 4,
-    background: "#7fbded ",
-    borderLeft: "5px solid #ea580c",
-    boxShadow: 3
-      }}
-    >
-      <Typography variant="h4" sx={{ color: "#0f172a", fontWeight: 700 }}>{degreeStudents}</Typography>
-      <Typography sx={{ color: "#0f172a",fontWeight: 800 }}>Degree Students</Typography>
-    </Paper>
-  </Grid>
+          <Grid item xs={12} md={4} key={i}>
 
-  <Grid item xs={12} md={4}>
-    <Paper
-      sx={{
-         p: 3,
-    borderRadius: 4,
-    background: "#7fbded ",
-    borderLeft: "5px solid #ea580c",
-    boxShadow: 3
-      }}
-    >
-      <Typography variant="h4"sx={{ color: "#0f172a", fontWeight: 700 }}>{diplomaStudents}</Typography>
-      <Typography sx={{ color: "#0f172a",fontWeight: 800 }}>Diploma Students</Typography>
-    </Paper>
-  </Grid>
+            <Paper
+              sx={{
+                p: 3,
+                borderRadius: 4,
+                borderLeft: "5px solid #ea580c",
+                boxShadow: 3
+              }}
+            >
 
-</Grid>
+              <Typography variant="h4" fontWeight="bold">
+                {item.value}
+              </Typography>
 
-     
-      
+              <Typography color="text.secondary">
+                {item.label}
+              </Typography>
 
-
-      {/* STUDENTS */}
-      <Grid container spacing={3}>
-
-        {filteredStudents.map((student) => (
-
-          <Grid item xs={12} md={6} lg={4} key={student._id}>
-
-            <Card
-  sx={{
-    borderRadius: 4,
-    borderLeft: "6px solid #ea580c",
-    overflow: "hidden",
-    transition: "0.3s",
-    boxShadow: 3,
-    "&:hover": {
-      transform: "translateY(-6px)",
-      boxShadow: 8
-    }
-  }}
->
-
-              <CardContent>
-
-                <Stack direction="row" spacing={2} alignItems="center" mb={2}>
-
-                  <Avatar sx={{ bgcolor: "#0f172a" }}>
-                    {student.studentId?.studentname?.charAt(0)}
-                  </Avatar>
-
-                  <Box>
-
-                    <Typography fontWeight={600}>
-                      <PersonIcon sx={{ fontSize: 16, mr: 0.5 }} />
-                      {student.studentId?.studentname}
-                    </Typography>
-
-                    <Typography variant="body2" color="text.secondary">
-                      <EmailIcon sx={{ fontSize: 16, mr: 0.5 }} />
-                      {student.studentId?.email}
-                    </Typography>
-
-                  </Box>
-
-                </Stack>
-
-                <Stack direction="row" spacing={1} alignItems="center" mb={2}>
-                  <SchoolIcon fontSize="small" />
-                  <Typography variant="body2">
-                    {student.courseId?.courseName}
-                  </Typography>
-                </Stack>
- <Stack direction="row" spacing={1} alignItems="center" mb={2}>
-<Chip
-  label={student.courseId?.subcategory?.name}
-  color="primary"
-  size="small"
-/>
-</Stack>
-                <Stack direction="row" spacing={1} alignItems="center" mb={2}>
-                  <PaymentIcon fontSize="small" />
-                  
-                  <Chip
-                    label={student.paymentMethod}
-                    size="small"
-                    variant="outlined"
-                  />
-                </Stack>
-
-                <Chip
-                  label={student.status}
-                  color={
-                    student.status === "Paid"
-                      ? "success"
-                      : "warning"
-                  }
-                  size="small"
-                />
-
-              </CardContent>
-
-            </Card>
+            </Paper>
 
           </Grid>
 
         ))}
 
       </Grid>
+
+      {/* TABLE */}
+
+      <TableContainer
+        component={Paper}
+        sx={{
+          borderRadius: 3,
+          borderLeft: "6px solid #ea580c"
+        }}
+      >
+
+        <Table>
+
+          <TableHead sx={{ background: "#f1f5f9" }}>
+
+            <TableRow>
+
+              <TableCell><b>Name</b></TableCell>
+              <TableCell><b>Email</b></TableCell>
+              <TableCell><b>Course</b></TableCell>
+              <TableCell><b>Type</b></TableCell>
+              <TableCell><b>Price</b></TableCell>
+              <TableCell><b>Payment</b></TableCell>
+              <TableCell><b>Status</b></TableCell>
+              <TableCell><b>Action</b></TableCell>
+
+            </TableRow>
+
+          </TableHead>
+
+          <TableBody>
+
+            {filteredStudents
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((student) => (
+
+                <TableRow key={student._id} hover>
+
+                  <TableCell>
+                    {student.studentId?.studentname}
+                  </TableCell>
+
+                  <TableCell>
+                    {student.studentId?.email}
+                  </TableCell>
+
+                  <TableCell>
+                    {student.courseId?.courseName}
+                  </TableCell>
+
+                  <TableCell>
+
+                    <Chip
+                      label={student.courseId?.subcategory?.name}
+                      size="small"
+                      sx={{
+                        background: "#e0f2fe",
+                        color: "#0369a1",
+                        fontWeight: 600
+                      }}
+                    />
+
+                  </TableCell>
+
+                  <TableCell>
+                    ₹ {student.courseId?.price}
+                  </TableCell>
+
+                  <TableCell>
+                    {student.paymentMethod}
+                  </TableCell>
+
+                  <TableCell>
+
+                    <Chip
+                      label={student.status}
+                      color={
+                        student.status === "Paid"
+                          ? "success"
+                          : "warning"
+                      }
+                      size="small"
+                    />
+
+                  </TableCell>
+
+                  <TableCell>
+
+                    <IconButton
+                      color="primary"
+                      onClick={() => handleView(student)}
+                    >
+                      <VisibilityIcon />
+                    </IconButton>
+
+                    <IconButton
+                      color="secondary"
+                      onClick={() => handleEdit(student)}
+                    >
+                      <EditIcon />
+                    </IconButton>
+
+                  </TableCell>
+
+                </TableRow>
+
+              ))}
+
+          </TableBody>
+
+        </Table>
+
+        <TablePagination
+          component="div"
+          count={filteredStudents.length}
+          page={page}
+          onPageChange={(e, newPage) => setPage(newPage)}
+          rowsPerPage={rowsPerPage}
+          onRowsPerPageChange={(e) => {
+            setRowsPerPage(parseInt(e.target.value, 10));
+            setPage(0);
+          }}
+        />
+
+      </TableContainer>
+
+      {/* VIEW STUDENT MODAL */}
+
+      <Dialog open={viewOpen} onClose={() => setViewOpen(false)} maxWidth="sm" fullWidth>
+
+        <DialogTitle fontWeight="bold">
+          Student Details
+        </DialogTitle>
+
+        <DialogContent>
+
+          {selectedStudent && (
+
+            <Grid container spacing={2} mt={1}>
+
+              <Grid item xs={6}>
+                <Typography color="text.secondary">
+                  Name
+                </Typography>
+
+                <Typography fontWeight="bold">
+                  {selectedStudent.studentId?.studentname}
+                </Typography>
+              </Grid>
+
+              <Grid item xs={6}>
+                <Typography color="text.secondary">
+                  Email
+                </Typography>
+
+                <Typography fontWeight="bold">
+                  {selectedStudent.studentId?.email}
+                </Typography>
+              </Grid>
+
+              <Grid item xs={6}>
+                <Typography color="text.secondary">
+                  Course
+                </Typography>
+
+                <Typography fontWeight="bold">
+                  {selectedStudent.courseId?.courseName}
+                </Typography>
+              </Grid>
+
+              <Grid item xs={6}>
+                <Typography color="text.secondary">
+                  Course Type
+                </Typography>
+
+                <Chip
+                  label={selectedStudent.courseId?.subcategory?.name}
+                  color="info"
+                  size="small"
+                />
+              </Grid>
+
+              <Grid item xs={6}>
+                <Typography color="text.secondary">
+                  Course Price
+                </Typography>
+
+                <Typography fontWeight="bold" color="green">
+                  ₹ {selectedStudent.courseId?.price}
+                </Typography>
+              </Grid>
+
+              <Grid item xs={6}>
+                <Typography color="text.secondary">
+                  Payment Method
+                </Typography>
+
+                <Typography fontWeight="bold">
+                  {selectedStudent.paymentMethod}
+                </Typography>
+              </Grid>
+
+              <Grid item xs={6}>
+                <Typography color="text.secondary">
+                  Payment Status
+                </Typography>
+
+                <Chip
+                  label={selectedStudent.status}
+                  color={selectedStudent.status === "Paid" ? "success" : "warning"}
+                />
+              </Grid>
+
+            </Grid>
+
+          )}
+
+        </DialogContent>
+
+      </Dialog>
 
     </Box>
   );

@@ -12,12 +12,11 @@ const studentSlice = createSlice({
 
     getStudents: (state) => {
       state.loading = true;
-       state.error = null;
     },
 
     getStudentsSuccess: (state, action) => {
       state.loading = false;
-      state.students = action.payload;
+      state.students = action.payload;   // ✅ IMPORTANT
       state.count = action.payload.length;
     },
 

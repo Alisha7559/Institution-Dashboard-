@@ -2,21 +2,24 @@ import React, { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { loginSuccess } from 'container/LoginContainer/slice';
+import { userMe } from 'container/LoginContainer/slice';
 
-const AuthGuard = ({ children, user }) => {
+const AuthGuard = ({ children }) => {
   const dispatch = useDispatch();
 
-  const checkUser = true;
+const checkUser = useSelector((state) =>state.login.userData)
+  
 
   useEffect(() => {
-    dispatch(loginSuccess());
-  }, [user]);
+    dispatch(userMe());
+  }, [dispatch]);
 
-   if (!checkUser && user != null) {
-    return <Navigate to="/not-found" replace={true} />;
-  } else {
-  }
+
+  console.log(checkUser)
+
+if (!checkUser || Object.keys(checkUser).length === 0) {
+  return <Navigate to="/login" replace />;
+}
 
   return children;
 };
