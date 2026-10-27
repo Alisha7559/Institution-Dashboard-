@@ -208,7 +208,7 @@ const CoursesDashboard = () => {
     form.append("location", formData.location);
     form.append("description", formData.description);
     form.append("duration", formData.duration);
-
+form.append("level", formData.level);
     let skillsArray = [];
     if (typeof formData.skills === "string") {
       skillsArray = formData.skills.split(",").map((s) => s.trim());
@@ -218,6 +218,7 @@ const CoursesDashboard = () => {
 
     form.append("skills", JSON.stringify(skillsArray));
     form.append("modules", JSON.stringify(formData.modules));
+
 
     formData.images.forEach((img) => {
       if (img instanceof File) form.append("images", img);
@@ -556,6 +557,19 @@ const CoursesDashboard = () => {
         <Typography color="#0f172a"  fontWeight="900">Location</Typography>
         <Typography color="#0f172a"fontSize="500">{selectedCourse.location}</Typography>
       </Grid>
+      <Grid item xs={12}>
+  <Typography color="#0f172a" fontWeight="900">Level</Typography>
+
+  <Chip
+    label={selectedCourse?.level || "Not Set"}
+    sx={{
+      mt: 0.5,
+      fontWeight: "600",
+      
+      color: "#0f172a"
+    }}
+  />
+</Grid>
     </Grid>
   </Box>
 
@@ -584,11 +598,22 @@ const CoursesDashboard = () => {
 
   {/* Description */}
   <Box mb={3}>
-    <Typography  fontWeight="900" mb={1} color="#0f172a" >
-      Description
-    </Typography>
-    <Typography color="#0f172a"fontSize="500">{selectedCourse.description}</Typography>
-  </Box>
+  <Typography fontWeight="900" mb={1} color="#0f172a">
+    Description
+  </Typography>
+
+  <Typography
+    sx={{
+      color: "#0f172a",
+      fontSize: "15px",
+      lineHeight: "1.8",
+      textAlign: "justify",
+      letterSpacing: "0.3px"
+    }}
+  >
+    {selectedCourse.description}
+  </Typography>
+</Box>
 
   {/* Modules */}
   {selectedCourse.modules?.length > 0 && (
@@ -601,7 +626,17 @@ const CoursesDashboard = () => {
           <Typography fontWeight="700" color="#0f172a">
             {index + 1}. {m.title}
           </Typography>
-          <Typography variant="body2" fontSize="500" color="#0f172a">{m.description}</Typography>
+          <Typography
+  sx={{
+    color: "#0f172a",
+    fontSize: "14px",
+    lineHeight: "1.7",
+    textAlign: "justify",
+    mt: 0.5
+  }}
+>
+  {m.description}
+</Typography>
           {index !== selectedCourse.modules.length - 1 && <Divider sx={{ mt: 1 }} />}
         </Box>
       ))}

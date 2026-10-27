@@ -7,453 +7,364 @@ import {
   Typography,
   Grid,
   Paper,
-  Stack,
   CircularProgress,
-  Button,
-  Menu,
-  MenuItem,
+  IconButton,
+  Chip,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Chip,
-  TablePagination,
-  IconButton,
+  Drawer,
+  TextField,
+  Button,
   Dialog,
-  DialogTitle,
-  DialogContent
+ 
+  Card, FormControl, InputLabel, Select, MenuItem
 } from "@mui/material";
 
-import FilterListIcon from "@mui/icons-material/FilterList";
-import SearchIcon from "@mui/icons-material/Search";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function Students() {
-
   const dispatch = useDispatch();
-
   const { students = [], loading = false } = useSelector(
     (state) => state.student || {}
   );
 
-  const [search, setSearch] = useState("");
-  const [courseTypeFilter, setCourseTypeFilter] = useState("All");
-
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [menuWidth, setMenuWidth] = useState(null);
-  const open = Boolean(anchorEl);
-
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [viewOpen, setViewOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
-
-  // pagination
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(8);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   useEffect(() => {
     dispatch(getStudents());
   }, [dispatch]);
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-    setMenuWidth(event.currentTarget.offsetWidth);
-  };
-  const handleClose = (value) => {
-    if (value) setCourseTypeFilter(value);
-    setAnchorEl(null);
-  };
-
+  // ---------------- VIEW ----------------
   const handleView = (student) => {
     setSelectedStudent(student);
     setViewOpen(true);
   };
 
+  // ---------------- EDIT ----------------
   const handleEdit = (student) => {
     setSelectedStudent(student);
     setEditOpen(true);
   };
+  const cancelDelete = () => {
+  setDeleteOpen(false);
+  setSelectedStudent(null);
+};
 
-  // statistics
-  const totalStudents = students.length;
+  const handleUpdate = async () => {
+    try {
+      await fetch(
+        `http://localhost:7000/api/registrations/${selectedStudent._id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({
+            status: selectedStudent.status
+          })
+        }
+      );
+      dispatch(getStudents());
+      setEditOpen(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
- const degreeStudents = students.filter(
-  (s) => s.courseId?.subcategory?.name?.toLowerCase() === "degree"
-).length;
+  // ---------------- DELETE ----------------
+  const handleDeleteClick = (student) => {
+    setSelectedStudent(student);
+    setDeleteOpen(true);
+  };
 
-const diplomaStudents = students.filter(
-  (s) => s.courseId?.subcategory?.name?.toLowerCase() === "diploma"
-).length;
-
-  // latest first + search + filter
-  const filteredStudents = [...students]
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-    .filter((s) =>
-      (s.studentId?.studentname || "")
-        .toLowerCase()
-        .includes(search.toLowerCase())
-    )
-    .filter((s) => {
-  const type = s.courseId?.subcategory?.name?.toLowerCase();
-
-  if (courseTypeFilter === "Degree") {
-    return type === "degree";
-  }
-
-  if (courseTypeFilter === "Diploma") {
-    return type === "diploma";
-  }
-
-  return true;
-});
+  const confirmDelete = async () => {
+    await fetch(
+      `http://localhost:7000/api/registration/${selectedStudent._id}`,
+      {
+        method: "DELETE",
+        credentials: "include"
+      }
+    );
+    dispatch(getStudents());
+    setDeleteOpen(false);
+  };
 
   if (loading) {
     return (
-      <Box sx={{ textAlign: "center", mt: 10 }}>
+      <Box textAlign="center" mt={10}>
         <CircularProgress />
       </Box>
     );
   }
 
   return (
-    <Box sx={{ p: 4, backgroundColor: "#e6edf8", minHeight: "100vh" }}>
-
-      {/* HEADER */}
-
-      <Typography variant="h4" fontWeight="bold" mb={4}>
-        Registered Students
+    <Box p={4} sx={{ background: "#e6edf8", minHeight: "100vh" }}>
+      <Typography variant="h3" fontWeight="bold" mb={3}>
+        Students
       </Typography>
 
-      {/* SEARCH + FILTER */}
-
-      <Stack direction="row" spacing={2} mb={3}>
-
-        <Button
-          variant="contained"
-          startIcon={<FilterListIcon />}
-          onClick={handleClick}
-          sx={{
-            background: "#fff",
-            color: "#0f172a",
-            borderRadius: "30px",
-            textTransform: "none",
-            px: 3,
-            boxShadow: 2,
-            "&:hover": {
-              background: "#fff", // prevents hover color change
-              boxShadow: 2
-            }
-          }}
-        >
-          {courseTypeFilter === "All" ? "All Courses" : courseTypeFilter}
-        </Button>
-
-        <Menu
-          anchorEl={anchorEl}
-          open={open}
-          onClose={() => handleClose()}
-          PaperProps={{
-            sx: {
-              width: menuWidth,
-              borderRadius: "12px"
-            }
-          }}
-        >
-          <MenuItem onClick={() => handleClose("All")}>All</MenuItem>
-          <MenuItem onClick={() => handleClose("Degree")}>Degree</MenuItem>
-          <MenuItem onClick={() => handleClose("Diploma")}>Diploma</MenuItem>
-        </Menu>
-
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            background: "#fff",
-            borderRadius: "30px",
-            px: 2,
-            boxShadow: 2,
-            width: 280
-          }}
-        >
-
-          <SearchIcon sx={{ color: "#888", mr: 1 }} />
-
-          <input
-            placeholder="Search student..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            style={{
-              border: "none",
-              outline: "none",
-              width: "100%",
-              background: "transparent"
-            }}
-          />
-
-        </Box>
-
-      </Stack>
-
-      {/* STATISTICS */}
-
-      <Grid container spacing={3} mb={4}>
-
-        {[
-          { label: "Total Students", value: totalStudents },
-          { label: "Degree Students", value: degreeStudents },
-          { label: "Diploma Students", value: diplomaStudents }
-        ].map((item, i) => (
-
-          <Grid item xs={12} md={4} key={i}>
-
-            <Paper
-              sx={{
-                p: 3,
-                borderRadius: 4,
-                borderLeft: "5px solid #ea580c",
-                boxShadow: 3
-              }}
-            >
-
-              <Typography variant="h4" fontWeight="bold">
-                {item.value}
-              </Typography>
-
-              <Typography color="text.secondary">
-                {item.label}
-              </Typography>
-
-            </Paper>
-
-          </Grid>
-
-        ))}
-
-      </Grid>
-
       {/* TABLE */}
-
-      <TableContainer
-        component={Paper}
-        sx={{
-          borderRadius: 3,
-          borderLeft: "6px solid #ea580c"
-        }}
-      >
-
+      <Card sx={{ borderLeft: "5px solid #ea580c",  borderRadius: "10px",
+                padding: "20px",
+                boxShadow: "0 4px 10px rgba(0,0,0,0.08)",
+               }}>
         <Table>
-
-          <TableHead sx={{ background: "#f1f5f9" }}>
-
+          <TableHead>
             <TableRow>
-
-              <TableCell><b>Name</b></TableCell>
-              <TableCell><b>Email</b></TableCell>
-              <TableCell><b>Course</b></TableCell>
-              <TableCell><b>Type</b></TableCell>
-              <TableCell><b>Price</b></TableCell>
-              <TableCell><b>Payment</b></TableCell>
-              <TableCell><b>Status</b></TableCell>
-              <TableCell><b>Action</b></TableCell>
-
+              <TableCell>Name</TableCell>
+              <TableCell>Email</TableCell>
+              <TableCell>Course</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell>Actions</TableCell>
             </TableRow>
-
           </TableHead>
 
           <TableBody>
+            {students.map((s) => (
+              <TableRow key={s._id}>
+                <TableCell>{s.studentId?.studentname}</TableCell>
+                <TableCell>{s.studentId?.email}</TableCell>
+                <TableCell>{s.courseId?.courseName}</TableCell>
 
-            {filteredStudents
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((student) => (
+                <TableCell>
+                  <Chip
+                    label={s.status}
+                    sx={{
+                      background:
+                        s.status === "Paid" ? "#2e7d32" : "#ea580c",
+                      color: "#fff"
+                    }}
+                  />
+                </TableCell>
 
-                <TableRow key={student._id} hover>
+                <TableCell>
+                  <IconButton onClick={() => handleView(s)}>
+                    <VisibilityIcon />
+                  </IconButton>
 
-                  <TableCell>
-                    {student.studentId?.studentname}
-                  </TableCell>
+                  <IconButton onClick={() => handleEdit(s)}>
+                    <EditIcon />
+                  </IconButton>
 
-                  <TableCell>
-                    {student.studentId?.email}
-                  </TableCell>
-
-                  <TableCell>
-                    {student.courseId?.courseName}
-                  </TableCell>
-
-                  <TableCell>
-
-                    <Chip
-                      label={student.courseId?.subcategory?.name}
-                      size="small"
-                      sx={{
-                        background: "#e0f2fe",
-                        color: "#0369a1",
-                        fontWeight: 600
-                      }}
-                    />
-
-                  </TableCell>
-
-                  <TableCell>
-                    ₹ {student.courseId?.price}
-                  </TableCell>
-
-                  <TableCell>
-                    {student.paymentMethod}
-                  </TableCell>
-
-                  <TableCell>
-
-                    <Chip
-                      label={student.status}
-                      color={
-                        student.status === "Paid"
-                          ? "success"
-                          : "warning"
-                      }
-                      size="small"
-                    />
-
-                  </TableCell>
-
-                  <TableCell>
-
-                    <IconButton
-                      color="primary"
-                      onClick={() => handleView(student)}
-                    >
-                      <VisibilityIcon />
-                    </IconButton>
-
-                    <IconButton
-                      color="secondary"
-                      onClick={() => handleEdit(student)}
-                    >
-                      <EditIcon />
-                    </IconButton>
-
-                  </TableCell>
-
-                </TableRow>
-
-              ))}
-
+                  <IconButton
+                    sx={{ color: "#ea580c" }}
+                    onClick={() => handleDeleteClick(s)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
-
         </Table>
+      
+      </Card>
 
-        <TablePagination
-          component="div"
-          count={filteredStudents.length}
-          page={page}
-          onPageChange={(e, newPage) => setPage(newPage)}
-          rowsPerPage={rowsPerPage}
-          onRowsPerPageChange={(e) => {
-            setRowsPerPage(parseInt(e.target.value, 10));
-            setPage(0);
-          }}
-        />
+      {/* ================= VIEW DRAWER ================= */}
+      <Drawer
+        anchor="right"
+        open={viewOpen}
+        onClose={() => setViewOpen(false)}
+        PaperProps={{ sx: { width: 500 } }}
+      >
+        {selectedStudent && (
+          <Box>
+            {/* HEADER */}
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              p={3}
+            >
+              <Typography variant="h4" fontWeight="bold">
+                {selectedStudent.studentId?.studentname}
+              </Typography>
+              <IconButton onClick={() => setViewOpen(false)}>✕</IconButton>
+            </Box>
 
-      </TableContainer>
+            <Box p={3}>
+              <Chip
+                label={selectedStudent.status}
+                sx={{
+                  background:
+                    selectedStudent.status === "Paid"
+                      ? "#2e7d32"
+                      : "#ea580c",
+                  color: "#fff",
+                  mb: 3
+                }}
+              />
 
-      {/* VIEW STUDENT MODAL */}
+              <Paper sx={{ p: 3, borderRadius: 3 }}>
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <Typography>Email</Typography>
+                    <Typography fontWeight="bold">
+                      {selectedStudent.studentId?.email}
+                    </Typography>
+                  </Grid>
 
-      <Dialog open={viewOpen} onClose={() => setViewOpen(false)} maxWidth="sm" fullWidth>
+                  <Grid item xs={6}>
+                    <Typography>Course</Typography>
+                    <Typography fontWeight="bold">
+                      {selectedStudent.courseId?.courseName}
+                    </Typography>
+                  </Grid>
 
-        <DialogTitle fontWeight="bold">
-          Student Details
-        </DialogTitle>
+                  <Grid item xs={6}>
+                    <Typography>Fees</Typography>
+                    <Typography fontWeight="bold">
+                      ₹{selectedStudent.courseId?.fees}
+                    </Typography>
+                  </Grid>
 
-        <DialogContent>
+                  <Grid item xs={6}>
+                    <Typography>Payment</Typography>
+                    <Typography fontWeight="bold">
+                      {selectedStudent.paymentMethod}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Paper>
+            </Box>
+          </Box>
+        )}
+      </Drawer>
 
-          {selectedStudent && (
+      {/* ================= EDIT DRAWER ================= */}
+      <Drawer
+        anchor="right"
+        open={editOpen}
+        onClose={() => setEditOpen(false)}
+        PaperProps={{ sx: { width: 400 } }}
+      >
+        {selectedStudent && (
+          <Box p={3}>
+            <Box display="flex" justifyContent="space-between">
+              <Typography variant="h4">Edit Student</Typography>
+              <IconButton onClick={() => setEditOpen(false)}>✕</IconButton>
+            </Box>
 
-            <Grid container spacing={2} mt={1}>
+            <TextField
+              fullWidth
+              label="Name"
+              value={selectedStudent.studentId?.studentname}
+              margin="normal"
+              disabled
+            />
 
-              <Grid item xs={6}>
-                <Typography color="text.secondary">
-                  Name
+            <TextField
+              fullWidth
+              label="Email"
+              value={selectedStudent.studentId?.email}
+              margin="normal"
+              disabled
+            />
+
+            <FormControl fullWidth margin="normal">
+  <InputLabel>Status</InputLabel>
+  <Select
+    value={selectedStudent.status || ""}
+    label="Status"
+    onChange={(e) =>
+      setSelectedStudent({
+        ...selectedStudent,
+        status: e.target.value
+      })
+    }
+  >
+    <MenuItem value="Pending">Pending</MenuItem>
+    <MenuItem value="Paid">Paid</MenuItem>
+  </Select>
+</FormControl>
+
+            <Button
+              fullWidth
+              variant="contained"
+              sx={{ mt: 2, background: "#ea580c" }}
+              onClick={handleUpdate}
+            >
+              Update Student
+            </Button>
+          </Box>
+        )}
+      </Drawer>
+
+      
+      {/* DELETE DIALOG */}
+            <Dialog
+              open={deleteOpen}
+              onClose={cancelDelete}
+              PaperProps={{
+                sx: {
+                  borderRadius: 3,
+                  p: 3,
+                  minWidth: 360,
+                  backgroundColor: "#f9fafc",
+                  boxShadow: 3
+                }
+              }}
+            >
+              <Box textAlign="center">
+                {/* Warning Icon */}
+                <Box
+                  sx={{
+                    backgroundColor: "#0f172a",
+                    borderRadius: "50%",
+                    width: 60,
+                    height: 60,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    mx: "auto",
+                    mb: 2
+                  }}
+                >
+                  <Typography variant="h1" color="#ea580c">!</Typography>
+                </Box>
+      
+                {/* Title */}
+                <Typography variant="h4" fontWeight="bold" mb={1}>
+                  Delete Course
                 </Typography>
-
-                <Typography fontWeight="bold">
-                  {selectedStudent.studentId?.studentname}
+      
+                {/* Description */}
+                <Typography color="text.primary" variant="body2" mb={3}>
+                  Are you sure you want to delete this course?
+                  This action cannot be undone.
                 </Typography>
-              </Grid>
-
-              <Grid item xs={6}>
-                <Typography color="text.secondary">
-                  Email
-                </Typography>
-
-                <Typography fontWeight="bold">
-                  {selectedStudent.studentId?.email}
-                </Typography>
-              </Grid>
-
-              <Grid item xs={6}>
-                <Typography color="text.secondary">
-                  Course
-                </Typography>
-
-                <Typography fontWeight="bold">
-                  {selectedStudent.courseId?.courseName}
-                </Typography>
-              </Grid>
-
-              <Grid item xs={6}>
-                <Typography color="text.secondary">
-                  Course Type
-                </Typography>
-
-                <Chip
-                  label={selectedStudent.courseId?.subcategory?.name}
-                  color="info"
-                  size="small"
-                />
-              </Grid>
-
-              <Grid item xs={6}>
-                <Typography color="text.secondary">
-                  Course Price
-                </Typography>
-
-                <Typography fontWeight="bold" color="green">
-                  ₹ {selectedStudent.courseId?.price}
-                </Typography>
-              </Grid>
-
-              <Grid item xs={6}>
-                <Typography color="text.secondary">
-                  Payment Method
-                </Typography>
-
-                <Typography fontWeight="bold">
-                  {selectedStudent.paymentMethod}
-                </Typography>
-              </Grid>
-
-              <Grid item xs={6}>
-                <Typography color="text.secondary">
-                  Payment Status
-                </Typography>
-
-                <Chip
-                  label={selectedStudent.status}
-                  color={selectedStudent.status === "Paid" ? "success" : "warning"}
-                />
-              </Grid>
-
-            </Grid>
-
-          )}
-
-        </DialogContent>
-
-      </Dialog>
-
-    </Box>
+      
+                {/* Actions */}
+                <Box display="flex" justifyContent="center" gap={2}>
+                  <Button
+                    onClick={cancelDelete}
+                    variant="outlined"
+                    sx={{ borderRadius: 2, px: 3, color: "#0f172a", borderColor: "#0f172a" }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={confirmDelete}
+                    variant="contained"
+                    sx={{
+                      borderRadius: 2,
+                      px: 3,
+                      backgroundColor: "#ea580c",
+                      "&:hover": { backgroundColor: "#cc4700" }
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </Box>
+              </Box>
+            </Dialog>
+          </Box>
   );
 }

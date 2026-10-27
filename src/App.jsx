@@ -1,9 +1,10 @@
-import { useSelector } from 'react-redux';
-import { RouterProvider } from 'react-router-dom';
 
+import { RouterProvider } from 'react-router-dom';
+import { useEffect } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, StyledEngineProvider } from '@mui/material';
-
+import { userMe } from 'container/LoginContainer/slice';
+import { useSelector, useDispatch } from 'react-redux';
 // routing
 import router from 'routes';
 
@@ -19,6 +20,13 @@ import NavigationScroll from 'layout/NavigationScroll';
 
 const App = () => {
     const customization = useSelector((state) => state.customization);
+    //   const dispatch = useDispatch();
+
+
+    // useEffect(() => {
+    
+    //     dispatch(userMe());
+    // }, [dispatch]);
 
     return (
         <StyledEngineProvider injectFirst>

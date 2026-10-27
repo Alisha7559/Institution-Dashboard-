@@ -65,10 +65,44 @@ const AuthLogin = (props) => {
                       "1px 8px 10px #0f172a",
         }}
       >
-        <Box sx={{ mb: 3, display: 'flex', justifyContent: 'center' }}>
-          <Box component="img" src={logo} alt="NXTSTEP" sx={{ height: { xs: 95, sm: 100 }, maxWidth: '100%' }} />
-        </Box>
-        
+      <Box
+  sx={{
+    display: "flex",
+    alignItems: "center",
+    gap: 1.5
+  }}
+>
+  <Box component="img" src={logo} sx={{ height: 60 }} />
+
+  {/* Text Container */}
+  <Box sx={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
+    
+    <Typography
+      sx={{
+        fontWeight: 700,
+        fontSize: 24,
+        color: "#ea580c",
+        fontFamily: "Times New Roman",
+      }}
+    >
+      NXTSTEP
+    </Typography>
+
+    <Typography
+      sx={{
+        fontFamily: "Times New Roman",
+        fontSize: 15,
+        color: "#0f172a",
+        lineHeight: 1,
+                    mb: 3
+
+      }}
+    >
+      Design Your Future
+    </Typography>
+
+  </Box>
+</Box>
 
         <Typography
           variant="h4"
@@ -78,7 +112,7 @@ const AuthLogin = (props) => {
             fontWeight: 700,
             textAlign: 'center',
             letterSpacing: 0.5,
-            color: 'text.primary'
+            color: '#0f172a'
           }}
         >
           Welcome Back
@@ -88,7 +122,7 @@ const AuthLogin = (props) => {
           sx={{
             mb: 3,
             textAlign: 'center',
-            color: 'text.secondary'
+            color: '#0f172a'
           }}
         >
           Log in to your account to continue
@@ -129,15 +163,15 @@ const AuthLogin = (props) => {
                     fontWeight: 600,
                     fontSize: 16,
                     color: '#fff',
-                    backgroundColor: '#0c012b',
+                    backgroundColor: '#ea580c',
                     borderRadius: 2,
-                    border: '1px solid #0c012b',
+                    border: '1px solid #0f172a',
                     boxShadow: '0px 4px 10px rgba(0,0,0,0.15)',
                     transition: 'all 0.3s ease',
                     '&:hover': {
-                      backgroundColor: 'white',
-                      color: '#0c012b',
-                      border: '1px solid #0c012b'
+                      backgroundColor: '#0f172a',
+                      color: '#ea580c',
+                      border: '1px solid #0f172a'
                     }
                   }}
                 >

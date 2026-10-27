@@ -7,69 +7,57 @@ import commonApi from '../api';
 import appConfig from '../../config';
 import * as actionType from './slice';
 
+
+
 function* login(action) {
-
-  const loginReq = {
-    email: action.payload.email,
-    password: action.payload.password
-  };
-
   try {
     const params = {
-     api: `${appConfig.ip}/api/institution/login`,
+      api: `${appConfig.ip}/api/institution/login`,
       method: 'POST',
-      successAction: actionType.loginSuccess,
-      failAction: actionType.loginFail,
-      authorization: null,
-      body: loginReq
+      body: {
+        email: action.payload.email,
+        password: action.payload.password
+      }
     };
 
     const res = yield call(commonApi, params);
 
     if (res) {
-      yield call(toast.success, 'Login successful', { autoClose: 3000 });
+      yield put(actionType.loginSuccess(res));
 
-      // ✅ FIXED HERE
-      yield put(actionType.userMe());
 
+      yield call(toast.success, 'Login successful');
       yield call(action.payload.navigate, '/dashboard');
-    } else {
-      yield call(toast.error, 'Login failed. Please try again.', { autoClose: 3000 });
     }
   } catch (error) {
-    console.error('Login failed:', error);
-    yield call(toast.error, 'Login failed. Please try again.', { autoClose: 3000 });
+    yield put(actionType.loginFail(error));
+    yield call(toast.error, 'Login failed');
   }
 }
 
-function* userMe() {
 
+function* userMe() {
   try {
     const params = {
       api: `${appConfig.ip}/api/profile`,
       method: 'GET',
-      successAction: actionType.userMeSuccess,
-      failAction: actionType.userMeFail,
-      authorization: `Bearer`,
-
-
+      authorization: null 
     };
 
     const res = yield call(commonApi, params);
 
+
     yield put(actionType.userMeSuccess(res));
 
   } catch (error) {
-    console.error('Fetch User failed:', error);
-    yield put(
-      actionType.userMeFail({
-        message: error.message || 'Failed to fetch user.',
-        status: error.response?.status || 500
-      })
-    );
-    yield call(toast.error, 'Failed to load user details.', { autoClose: 3000 });
+    yield put(actionType.userMeFail(error));
   }
 }
+
+
+
+
+
 function* updateProfile(action) {
   try {
     const params = {
@@ -92,6 +80,13 @@ function* updateProfile(action) {
     yield call(toast.error, "Profile update failed");
   }
 }
+
+
+
+
+
+
+
 
 export default function* LoginActionWatcher() {
   yield takeEvery(actionType.userLogin, login);

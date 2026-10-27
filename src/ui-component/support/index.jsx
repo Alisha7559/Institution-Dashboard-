@@ -23,7 +23,6 @@ import {
   Dialog
 } from "@mui/material";
 
-
 const Support = () => {
 
 const dispatch = useDispatch();
@@ -32,9 +31,7 @@ const { types, requests } = useSelector(state => state.support);
 
 const [supportType, setSupportType] = useState("");
 const [message, setMessage] = useState("");
-
 const [open,setOpen] = useState(false);
-
 
 
 /* ================= LOAD DATA ================= */
@@ -74,6 +71,14 @@ setOpen(false);
 
 return (
 
+<Box
+sx={{
+backgroundColor:"rgb(230, 237, 248)",
+minHeight:"100vh",
+width:"100%"
+}}
+>
+
 <Box sx={{p:3}}>
 
 {/* ================= HEADER ================= */}
@@ -95,12 +100,12 @@ color:"#0f172a"
 Support
 </Typography>
 
-
 <Button
 variant="contained"
 onClick={()=>setOpen(true)}
 sx={{
 background:"#0f172a",
+textTransform:"none",
 "&:hover":{background:"#020617"}
 }}
 >
@@ -195,7 +200,11 @@ onClose={()=>setOpen(false)}
 
 <Box sx={{p:3,width:420}}>
 
-<Typography variant="h6" mb={2}>
+<Typography
+variant="h6"
+mb={2}
+sx={{color:"#0f172a",fontWeight:600}}
+>
 Create Support Request
 </Typography>
 
@@ -239,6 +248,7 @@ fullWidth
 sx={{
 mt:3,
 background:"#ea580c",
+textTransform:"none",
 "&:hover":{background:"#c2410c"}
 }}
 onClick={sendRequest}
@@ -250,6 +260,7 @@ Send Request
 
 </Dialog>
 
+</Box>
 
 </Box>
 
